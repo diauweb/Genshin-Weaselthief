@@ -1,0 +1,8 @@
+{
+  "name": "genshin-weaselthief",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/diauweb/Genshin-WeaselThief",
+  "author": "代小呆 <diauweb@live.com>",
+  "license": "MIT"
+}

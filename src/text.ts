@@ -24,3 +24,7 @@ export function searchText (text: string) {
     console.timeEnd(`search key: ${text}`)
     return ret
 }
+
+export function getText (text: string) {
+    return chsMap[text]
+}

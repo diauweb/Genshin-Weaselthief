@@ -1,14 +1,14 @@
 <script>
     import { params, url } from '@roxi/routify'
+    import Dialog from '../components/Dialog.svelte'
     
     let data = new Promise((resolve) => resolve({ json: () => [] }))
-    if ($params.keyword) {
-        data = fetch(`/api/search_text?q=${encodeURIComponent($params.keyword)}`)
+    if ($params.id) {
+        data = fetch(`/api/search_dialogs?q=${encodeURIComponent($params.id)}`)
     }
 </script>
 
-<input type="search" value="{$params.keyword}" disabled>
-<p>Show up to 50 items in registry</p>
+<input type="search" value="{$params.id}" disabled>
 
 {#await data}
     <p>loading data...</p> 
@@ -17,12 +17,7 @@
         {#await v.json() then o}
             {#each o.result as e }
                 <li>
-                    <b>
-                        <a href="{$url(`/text/${e.id}`)}">
-                            {e.id}
-                        </a>
-                    </b> 
-                    {e.value}
+                    <Dialog data="{e}"/>
                 </li>
             {:else}
                 No matched data

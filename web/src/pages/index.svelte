@@ -18,7 +18,7 @@
 
 <p><strong>Proof-Of-Concept Project In very alpha stage</strong></p>
 
-<input type="search" placeholder="Search in game mapped texts" bind:value={searchText}>
+<input type="search" placeholder="Search in mapped texts" bind:value={searchText}>
 <button on:click="{search}">Search</button>
 
 <style>

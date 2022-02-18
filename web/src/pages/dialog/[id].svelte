@@ -17,12 +17,12 @@
 
     async function allDialogs () {
         const d = await (await fetch(`/api/dialog_set?t=${id}`)).json()
-        dialogs = d.dialogs
+        dialogs = [...d.dialogs]
     }
 
 </script>
 
 <button on:click="{allDialogs}">Load all relevant dialogs</button>
-{#each dialogs as e}
+{#each dialogs as e (e.Id)}
 <Dialog data="{e}" />
 {/each}

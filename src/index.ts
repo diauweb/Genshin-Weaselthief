@@ -1,11 +1,13 @@
 import express from 'express'
 import { getText, searchText } from './text.js'
 import path from 'path'
+import fse from 'fs-extra'
 import { getAllDialogs, getDialog, searchDialogContaining } from './dialog.js'
 
 const app = express()
+const fallbackIndex = (await fse.readFile(path.resolve('./web/public/index.html'))).toString()
 
-app.use(express.static('web/public'))
+app.use(express.static(path.resolve('web', 'public')))
 
 const api = express.Router()
 api.get('/status', function (req, res) {
@@ -58,7 +60,7 @@ api.get('/dialog_set', function(req, res) {
 
 app.use('/api', api)
 app.use('*', function (req, res) {
-    res.sendFile(path.resolve('web/public/index.html'), { status: 200 })
+    res.status(200).send(fallbackIndex)
 })
 
 app.listen(8081, () => {

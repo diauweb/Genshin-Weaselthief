@@ -6,14 +6,14 @@ import { goto } from "@roxi/routify";
 
     function gotoAndRefresh (dest) {
         $goto(`/dialog/${dest}`)
-        if(window) {
+        // if(window) {
             // workaround
-            window.location.pathname = `/dialog/${dest}`
-        }
+        //    window.location.pathname = `/dialog/${dest}`
+        //}
     }
 </script>
 
-<div class="card">
+<div class="card" class:player="{data?.TalkRole?.Type === 'TALK_ROLE_PLAYER'}">
     <details>
         <summary>
             <Translated id={data.TalkContentTextMapHash}/>
@@ -47,5 +47,9 @@ import { goto } from "@roxi/routify";
         background-color: #eee;
         margin: 5px;
         padding: 5px;
+    }
+
+    .player {
+        background-color: rgb(230, 235, 210) !important;
     }
 </style>

@@ -97,6 +97,8 @@ dist
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
 
+public/build
+
 # vuepress build output
 .vuepress/dist
 
@@ -128,6 +130,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-
-database.db
-GenshinData/

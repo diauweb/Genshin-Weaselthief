@@ -1,7 +1,13 @@
 import fse from 'fs-extra'
 import path from 'path'
 
-let chsMap = JSON.parse((await (fse.readFile(path.join('.', 'GenshinData', 'TextMap', 'TextMapCHS.json')))).toString())
+async function readMap (lang: string) {
+    return JSON.parse((await (fse.readFile(path.join('.', 'GenshinData', 'TextMap', `TextMap${lang}.json`)))).toString()) 
+}
+
+let chsMap = await readMap('CHS')
+let jpMap  = await readMap('JP')
+let enMap  = await readMap('EN') 
 
 export function searchText (text: string) {
     console.time(`search key: ${text}`)
@@ -26,5 +32,5 @@ export function searchText (text: string) {
 }
 
 export function getText (text: string) {
-    return chsMap[text]
+    return { CHS: chsMap[text], EN: enMap[text], JP: jpMap[text] }
 }

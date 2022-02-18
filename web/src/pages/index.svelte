@@ -16,7 +16,7 @@
 
 </script>
 
-<p><strong>Proof-Of-Concept Project In very alpha stage</strong></p>
+<p><strong>Proof-Of-Concept project, alpha quality.</strong></p>
 
 <input type="search" placeholder="Search in mapped texts" bind:value={searchText}>
 <button on:click="{search}">Search</button>

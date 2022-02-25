@@ -28,11 +28,19 @@ function ensureArg (req: any, res: any, v: string , cb: (v: string) => void) {
     }
 }
 
-api.get('/search_text', function(req, res) {
-    ensureArg(req, res, 'q', v => {
-        res.json({ ok: true, result: searchText(v) })
+function query (route : string, cb : (q: string) => any) {
+    api.get(route, function(req, res) {
+        ensureArg(req, res, 'q', v => {
+            try {
+                res.json({ ok: true, ...cb(v) })
+            } catch (error) {
+                res.status(500).json({ ok: false, error })
+            }
+        })
     })
-})
+}
+
+query('/search_text', q => searchText(q))
 
 api.get('/search_dialogs', function(req, res) {
     ensureArg(req, res, 'q', v => {

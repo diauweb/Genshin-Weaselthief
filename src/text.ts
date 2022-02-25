@@ -12,6 +12,7 @@ let enMap  = await readMap('EN')
 export function searchText (text: string) {
     console.time(`search key: ${text}`)
     const ret = []
+    let more = false
     let cnt = 0
     for (const [k, v] of Object.entries(chsMap)) {
         if ((v as string).includes(text)) {
@@ -22,13 +23,14 @@ export function searchText (text: string) {
             cnt++
         }
 
-        if(cnt > 50) {
-            break
+        if(cnt > 100) {
+          more = true
+          break
         }
     }
 
     console.timeEnd(`search key: ${text}`)
-    return ret
+    return { result: ret, more }
 }
 
 export function getText (text: string) {

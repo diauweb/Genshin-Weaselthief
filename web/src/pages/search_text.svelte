@@ -8,7 +8,7 @@
 </script>
 
 <input type="search" value="{$params.keyword}" disabled>
-<p>Show up to 50 items in registry</p>
+<p>Show up to 100 items in registry</p>
 
 {#await data}
     <p>loading data...</p> 
@@ -27,6 +27,9 @@
             {:else}
                 No matched data
             {/each}
+            {#if o.more}
+                <li>more...</li>
+            {/if}
         {/await}
         
     </ul>

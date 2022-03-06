@@ -1,21 +1,27 @@
 <script>
     import { getRole } from '../role-util.js'
     import Translated from './Translated.svelte'
-    export let role
-    
+    export let role = null
+    export let id = null
     
     let summaryName = JSON.stringify(role)
     let translation = false
     let npcInfo
 
-    if (role.Type === 'TALK_ROLE_NPC') {
-        getRole(role.Id).then(j => {
+    function setNpc (id) {
+        getRole(id).then(j => {
             if (j?.result?.NameTextMapHash) {
                 summaryName = j.result.NameTextMapHash
                 translation = true
             }
             npcInfo = j.result
         })
+    }
+
+    if (id) {
+        setNpc(id)
+    } else if (role.Type === 'TALK_ROLE_NPC') {
+        setNpc(role.Id)
     } else if (role.Type === 'TALK_ROLE_PLAYER') {
         summaryName = 'Player'
     }

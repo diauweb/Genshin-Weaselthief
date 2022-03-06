@@ -59,3 +59,40 @@ export function getAllDialogs (id: string) {
     console.timeEnd(`all_dialogs ${id}`)
     return Array.from(dialogs.values())
 }
+
+export function searchTalkByDialog (id: string) {
+    const baseDialog = getDialog(id)
+    type Dialog = { Id: number, NextDialogs: number[] }
+    function prev (k : Dialog) : Dialog {
+        for (const o of dialogTable) {
+            if (o.NextDialogs.includes(k.Id)) {
+                return prev(o)
+            }
+        }
+        return k
+    }
+    const first = prev(baseDialog)
+    return searchTalkByInitDialog(first.Id)
+}
+
+export function searchTalkByInitDialog (id: string | number) {
+    console.time(`search talk by init dialog ${id}`)
+    const rst = []
+    for (const o of talkTable) {
+        if (o.InitDialog == id) { 
+            rst.push(o)
+            // quite not possible to find more
+            break
+        }
+    }
+    console.timeEnd(`search talk by init dialog ${id}`)
+    return { result: rst }
+}
+
+export function getTalk (id: string) {
+    for (const o of talkTable) {
+        if (o.Id == id) { 
+            return { result: o }
+        }
+    }
+}

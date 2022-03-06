@@ -1,11 +1,12 @@
 import express from 'express'
-import { getText, searchText } from './text.js'
-import path from 'path'
 import fse from 'fs-extra'
-import { getAllDialogs, getDialog, searchDialogContaining } from './dialog.js'
-
+import path from 'path'
+import { getAllDialogs, getDialog, getTalk, searchDialogContaining, searchTalkByDialog } from './dialog.js'
 import * as git from './git.js'
+import { getQuests } from './quest.js'
 import { getNpc } from './role.js'
+import { getText, searchText } from './text.js'
+
 
 const app = express()
 const fallbackIndex = (await fse.readFile(path.resolve('./web/public/index.html'))).toString()
@@ -56,6 +57,10 @@ api.get('/search_dialogs', function(req, res) {
         res.json({ ok: true, result: searchDialogContaining(v) })
     })
 })
+
+query('/search_talk', q => searchTalkByDialog(q))
+query('/get_talk', q => getTalk(q))
+query('/get_quests', q => getQuests(q))
 
 api.get('/get_text', function(req, res) {
     ensureArg(req, res, 't', v => {

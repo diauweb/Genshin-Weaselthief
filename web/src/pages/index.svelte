@@ -18,8 +18,10 @@
 
 <p><strong>Proof-Of-Concept project, alpha quality.</strong></p>
 
-<input type="search" placeholder="Search in mapped texts" bind:value={searchText}>
-<button on:click="{search}">Search</button>
+<div>
+    <input type="search" placeholder="Search in mapped texts" bind:value={searchText}>
+    <button on:click="{search}">Search</button>
+</div>
 
 <style>
 	input {

@@ -1,7 +1,8 @@
 <script lang="ts">
     import Dialog from '../../components/Dialog.svelte'
 
-    import { onMount } from "svelte";
+    import { onMount } from "svelte"
+    import { goto } from '@roxi/routify'
 
     export let id
     let dialogs = []
@@ -15,14 +16,17 @@
         dialogs = [...dialogs, await fetchDialog(id)]
     })
 
-    async function allDialogs () {
-        const d = await (await fetch(`/api/dialog_set?t=${id}`)).json()
-        dialogs = [...d.dialogs]
+    async function gotoTalk () {
+        const e = await (await fetch(`/api/search_talk?q=${id}`)).json()
+        if (e.result.length <= 0) {
+            alert('no parent talk found')
+        } else {
+            $goto(`/talk/${e.result[0].Id}`)
+        }
     }
-
 </script>
 
-<button on:click="{allDialogs}">Load all relevant dialogs</button>
+<button on:click="{() => gotoTalk()}">Go to Talk</button>
 {#each dialogs as e (e.Id)}
 <Dialog data="{e}" />
 {/each}

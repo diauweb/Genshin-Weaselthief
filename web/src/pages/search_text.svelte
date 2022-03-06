@@ -1,10 +1,19 @@
 <script>
     import { params, url } from '@roxi/routify'
-    
+    import { lang } from '../lang-store.js'
+    import { onDestroy } from 'svelte'
+
     let data = new Promise((resolve) => resolve({ json: () => [] }))
-    if ($params.keyword) {
-        data = fetch(`/api/search_text?q=${encodeURIComponent($params.keyword)}`)
+    function update () {
+        if ($params.keyword) {
+            data = fetch(`/api/search_text?q=${encodeURIComponent($params.keyword)}&lang=${$lang}`)
+        }
     }
+
+    update()
+    const unsub = lang.subscribe(() => update())
+
+    onDestroy(unsub)
 </script>
 
 <input type="search" value="{$params.keyword}" disabled>

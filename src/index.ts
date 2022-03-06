@@ -42,7 +42,11 @@ function query (route : string, cb : (q: string) => any) {
     })
 }
 
-query('/search_text', q => searchText(q))
+api.get('/search_text', function(req, res) {
+    ensureArg(req, res, 'q', v => {
+        res.json({ ok: true, ...searchText(v, req.query['lang'] as string) })
+    })
+})
 
 api.get('/search_dialogs', function(req, res) {
     ensureArg(req, res, 'q', v => {

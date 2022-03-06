@@ -75,6 +75,11 @@ api.get('/dialog_set', function(req, res) {
     })
 })
 
+api.get('/version', async function (req, res) {
+    let __version__ = 'dev'
+    return res.json({ ok: true, version: __version__ })
+})
+
 api.get('/introspect', async function (req, res) {
     let __buildDate__ = 'dev'
     let __version__ = 'dev'

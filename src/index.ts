@@ -4,6 +4,8 @@ import path from 'path'
 import fse from 'fs-extra'
 import { getAllDialogs, getDialog, searchDialogContaining } from './dialog.js'
 
+import * as git from './git.js'
+
 const app = express()
 const fallbackIndex = (await fse.readFile(path.resolve('./web/public/index.html'))).toString()
 
@@ -63,6 +65,27 @@ api.get('/get_dialog', function(req, res) {
 api.get('/dialog_set', function(req, res) {
     ensureArg(req, res, 't', v => {
         res.json({ ok: true, dialogs: getAllDialogs(v) })
+    })
+})
+
+api.get('/introspect', async function (req, res) {
+    let __buildDate__ = 'dev'
+    let __version__ = 'dev'
+    let __branch__ = 'dev'
+    let data, commit
+    if (git.gitAvailable()) {
+        data = await git.getStatus()
+        commit = await git.getCommit()
+    }
+
+    res.json({
+        ok: true,
+        buildDate: __buildDate__,
+        version: __version__,
+        branch: __branch__,
+        vcs: git.gitAvailable(),
+        status: data,
+        commit
     })
 })
 

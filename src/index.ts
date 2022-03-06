@@ -5,6 +5,7 @@ import fse from 'fs-extra'
 import { getAllDialogs, getDialog, searchDialogContaining } from './dialog.js'
 
 import * as git from './git.js'
+import { getNpc } from './role.js'
 
 const app = express()
 const fallbackIndex = (await fse.readFile(path.resolve('./web/public/index.html'))).toString()
@@ -41,6 +42,8 @@ function query (route : string, cb : (q: string) => any) {
         })
     })
 }
+
+query('/npc', q => getNpc(q))
 
 api.get('/search_text', function(req, res) {
     ensureArg(req, res, 'q', v => {

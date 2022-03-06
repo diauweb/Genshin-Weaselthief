@@ -9,8 +9,7 @@
             data = fetch(`/api/search_text?q=${encodeURIComponent($params.keyword)}&lang=${$lang}`)
         }
     }
-
-    update()
+    
     const unsub = lang.subscribe(() => update())
 
     onDestroy(unsub)

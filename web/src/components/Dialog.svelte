@@ -1,7 +1,8 @@
 <script lang="ts">
-import { goto } from "@roxi/routify";
+    import { goto } from '@roxi/routify'
 
-    import Translated from "./Translated.svelte";
+    import Translated from './Translated.svelte'
+    import Role from './Role.svelte'
     export let data
 
     function gotoAndRefresh (dest) {
@@ -22,7 +23,7 @@ import { goto } from "@roxi/routify";
             <b>Id</b> <a href="#" on:click="{() => gotoAndRefresh(data.Id)}">{data.Id}</a>
         </p>
         <p>
-            <b>TalkRole</b> {JSON.stringify(data.TalkRole)}
+            <b>TalkRole</b> <Role role={data?.TalkRole}></Role>
         </p>
         <p>
             <b>Name</b> <Translated id={data.TalkRoleNameTextMapHash}/>

@@ -1,9 +1,4 @@
-import fse from 'fs-extra'
-import path from 'path'
-
-async function getJSON(...p : string[]) {
-    return JSON.parse((await (fse.readFile(path.join('.', 'GenshinData', ...p)))).toString())
-}
+import { getJSON } from "./util.js"
 
 const dialogTable = await getJSON('ExcelBinOutput', 'DialogExcelConfigData.json')
 const talkTable = await getJSON('ExcelBinOutput', 'TalkExcelConfigData.json')

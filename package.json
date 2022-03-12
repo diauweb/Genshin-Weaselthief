@@ -30,7 +30,7 @@
     "build": "rollup -c",
     "dev": "run-p dev:*",
     "dev:watch": "tsc -w",
-    "dev:start": "nodemon dist/index.js",
+    "dev:start": "nodemon --watch dist --watch web/public dist/index.js",
     "dev:web": "cd web && yarn dev"
   }
 }

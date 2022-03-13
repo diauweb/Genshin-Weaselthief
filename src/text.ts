@@ -54,14 +54,15 @@ export async function getText (text: string) {
 export async function getHistoryText (text: string, hs: string) {
     console.time(`get history text ${text}`)
     try {
-        function mp (lang: string) {
-            return path.join('TextMap', `TextMap${lang}.json`)
+        async function mp (lang: string) {
+            const p = path.join('TextMap', `TextMap${lang}.json`)
+            return (await getFile(p, hs))?.toString()!
         }
-        let chsMap = JSON.parse((await getFile(mp('CHS'), hs).toString()))
-        let enMap = JSON.parse((await getFile(mp('EN'), hs).toString()))
-        let jpMap = JSON.parse((await getFile(mp('JP'), hs).toString()))
+        let chsMap = JSON.parse(await mp('CHS'))
+        let enMap = JSON.parse(await mp('EN'))
+        let jpMap = JSON.parse(await mp('JP'))
     
-        const ret = { CHS: (await chsMap())[text], EN: (await enMap())[text], JP: (await jpMap())[text] }
+        const ret = { CHS: chsMap[text], EN: enMap[text], JP: jpMap[text] }
         return ret
     } catch (e) {
         console.log(e)

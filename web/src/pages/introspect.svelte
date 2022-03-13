@@ -1,37 +1,32 @@
 <script lang="ts">
-    import { onMount } from 'svelte'
+    import { onMount } from "svelte";
+    import GitCommit from "../components/GitCommit.svelte";
+    import { getIntrospection } from "../version-util.js";
 
-    let data : {
-        buildDate: string,
-        version: string,
-        branch: string,
-        vcs: boolean,
-        status: Record<string, string>,
-        commit: Record<string, any>,
-        dataVersion: {
-            fullVersion: string,
-            version: string
-        }
-    }
+    let data;
     onMount(async function () {
-        data = await (await fetch('/api/introspect')).json()
-    })
+        data = await getIntrospection();
+    });
 </script>
 
 <h2>Introspect</h2>
 {#if data}
-<p>Version: {data.version}</p>
-<p>Build Date: {data.buildDate}</p>
-<p>Branch: {data.branch}</p>
-<p>Data Version: {data.dataVersion.fullVersion}</p>
-{#if data.vcs}
-<fluent-button>Reset to master</fluent-button>
-<p>Data:</p>
-<pre>{ JSON.stringify(data.status, null, 2)}</pre>
-<pre>{ JSON.stringify(data.commit, null, 2)}</pre>
+    <p>Version: {data.version}</p>
+    <p>Build Date: {data.buildDate}</p>
+    <p>Branch: {data.branch}</p>
+    <p>Data Version: {data.dataVersion.fullVersion}</p>
+    {#if data.vcs}
+        <p>Data:</p>
+        <pre>{JSON.stringify(data.status, null, 2)}</pre>
+        <fluent-accordion>
+            {#each data.commit.all as d}
+                <GitCommit data={d} />
+            {/each}
+        </fluent-accordion>
+        <pre>{JSON.stringify(data.commit, null, 2)}</pre>
+    {:else}
+        <p><i>Data file is not in Version Control</i></p>
+    {/if}
 {:else}
-<p><i>Data file is not in Version Control</i></p>
-{/if}
-{:else}
-<i>Loading introspection</i>
+    <i>Loading introspection</i>
 {/if}

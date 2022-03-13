@@ -1,24 +1,12 @@
 import fse from 'fs-extra'
 import path from 'path'
-import { getCommit, gitAvailable, getFile } from './git.js'
+import { getFile } from './git.js'
+import { getVersion } from './version.js'
 
 let files = new Map<string, Promise<any>>()
 
-let version : string | null = null 
-if (gitAvailable()) {
-    version = (await getCommit()).latest!.hash
-}
-
-export function setVersion (commitId: string) {
-    if (!gitAvailable()) {
-        return
-    }
-    version = commitId
+export function reset () {
     files.clear()
-}
-
-export function getVersion () {
-    return version
 }
 
 export function getJSON(...pa : string[]) : () => Promise<any> {
@@ -31,11 +19,12 @@ export function getJSON(...pa : string[]) : () => Promise<any> {
 
         async function getter (p: string) {
             let fv
-            if (version) {
-                fv = (await getFile(p, version))?.toString()
+            let v = getVersion()
+            if (v) {
+                fv = (await getFile(p, v))?.toString()
             }
             if (!fv) {
-                fv = await (fse.readFile(path.join('.', 'GenshinData', ...p))).toString()
+                fv = (await fse.readFile(path.join('.', 'GenshinData', p))).toString()
             }
 
             return JSON.parse(fv)

@@ -6,13 +6,21 @@
     	provideFluentDesignSystem,
     	fluentBadge,
 		fluentTextField,
-		fluentButton
+		fluentButton,
+		fluentAccordion,
+   		fluentAccordionItem,
+		fluentSelect,
+    	fluentOption,
 	} from "@fluentui/web-components";
 
 	provideFluentDesignSystem().register(
 		fluentBadge(),
 		fluentTextField(),
 		fluentButton(),
+		fluentAccordion(),
+		fluentAccordionItem(),
+		fluentSelect(),
+		fluentOption(),
 	);
 
 </script>

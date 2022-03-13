@@ -5,13 +5,19 @@ import { getAllDialogs, getDialog, getTalk, searchDialogContaining, searchTalkBy
 import * as git from './git.js'
 import { getQuests } from './quest.js'
 import { getNpc } from './role.js'
-import { getText, searchText } from './text.js'
+import { getHistoryText, getText, searchText } from './text.js'
+import { getVersion, setVersion } from './version.js'
 
 
 const app = express()
 const fallbackIndex = (await fse.readFile(path.resolve('./web/public/index.html'))).toString()
 
 app.use(express.static(path.resolve('web', 'public')))
+app.use(express.json())
+
+if (git.gitAvailable()) {
+    setVersion((await git.getVersioningCommit()).hash)
+}
 
 const api = express.Router()
 api.get('/status', function (req, res) {
@@ -68,6 +74,12 @@ api.get('/get_text', async function(req, res) {
     })
 })
 
+api.get('/get_history_text', async function(req, res) {
+    ensureArg(req, res, 'q', async v => {
+        res.json({ ok: true, text: await getHistoryText(v, req.query['h'] as string) })
+    })
+})
+
 api.get('/get_dialog', async function(req, res) {
     ensureArg(req, res, 't', async v => {
         res.json({ ok: true, dialog: await getDialog(v) })
@@ -96,7 +108,7 @@ api.get('/introspect', async function (req, res) {
     let data, commit
     if (git.gitAvailable()) {
         data = await git.getStatus()
-        commit = await git.getCommit()
+        commit = await git.getCommits()
     }
 
     res.json({
@@ -109,6 +121,11 @@ api.get('/introspect', async function (req, res) {
         status: data,
         commit
     })
+})
+
+api.put('/set_version', async function (req, res) {
+    setVersion(req.body.version)
+    console.log(getVersion())
 })
 
 app.use('/api', api)

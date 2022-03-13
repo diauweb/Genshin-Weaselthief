@@ -1,4 +1,5 @@
 import simpleGit from 'simple-git'
+import { getVersion } from './version.js'
 
 let git : ReturnType<typeof simpleGit>
 let gitOk = false
@@ -15,7 +16,7 @@ export function gitAvailable () {
     return gitOk
 }
 
-export async function getCommit () {
+export async function getCommits () {
     return git.log()
 }
 
@@ -23,19 +24,16 @@ export async function getStatus () {
     return git.status()
 }
 
-let dataVersion : { fullVersion: string, version: string }
+export async function getVersioningCommit () {
+    return (await git.log({ file: 'TextMap/', maxCount: 1 })).all[0]
+}
+
 export async function getDataVersion () {
-    if (dataVersion) return dataVersion
-
     if (!gitOk) return { fullVersion: 'live', version: 'live' }
-    const log = await git.log({
-        file: 'TextMap/',
-        maxCount: 1
-    })
-
+    const log = await git.log([getVersion()!])
     const shortver = /\d+\.\d+\.\d+/.exec(log.latest?.message!)?.[0] ?? '???'
 
-    return dataVersion = {
+    return {
         fullVersion: log.latest?.message!,
         version: shortver
     }

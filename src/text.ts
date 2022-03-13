@@ -1,4 +1,6 @@
-import { getJSON } from './util'
+import { getJSON } from './util.js'
+import { getFile } from './git.js'
+import path from 'path'
 
 function readMap (lang: string) {
     return getJSON('TextMap', `TextMap${lang}.json`)
@@ -47,4 +49,24 @@ export async function searchText (text: string, lang: string) {
 
 export async function getText (text: string) {
     return { CHS: (await chsMap())[text], EN: (await enMap())[text], JP: (await jpMap())[text] }
+}
+
+export async function getHistoryText (text: string, hs: string) {
+    console.time(`get history text ${text}`)
+    try {
+        function mp (lang: string) {
+            return path.join('TextMap', `TextMap${lang}.json`)
+        }
+        let chsMap = JSON.parse((await getFile(mp('CHS'), hs).toString()))
+        let enMap = JSON.parse((await getFile(mp('EN'), hs).toString()))
+        let jpMap = JSON.parse((await getFile(mp('JP'), hs).toString()))
+    
+        const ret = { CHS: (await chsMap())[text], EN: (await enMap())[text], JP: (await jpMap())[text] }
+        return ret
+    } catch (e) {
+        console.log(e)
+        return { CHS: 'Error while getting text', EN: '', JP: ''}
+    } finally {
+        console.timeEnd(`get history text ${text}`)
+    }
 }

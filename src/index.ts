@@ -20,9 +20,9 @@ api.get('/status', function (req, res) {
     })
 })
 
-function ensureArg (req: any, res: any, v: string , cb: (v: string) => void) {
+async function ensureArg (req: any, res: any, v: string , cb: (v: string) => Promise<void>) {
     if (req.query[v]) {
-        cb(req.query[v])
+        await cb(req.query[v])
     } else {
         res.status(400)
         res.json({
@@ -33,10 +33,10 @@ function ensureArg (req: any, res: any, v: string , cb: (v: string) => void) {
 }
 
 function query (route : string, cb : (q: string) => any) {
-    api.get(route, function(req, res) {
-        ensureArg(req, res, 'q', v => {
+    api.get(route, async function(req, res) {
+        ensureArg(req, res, 'q', async v => {
             try {
-                res.json({ ok: true, ...cb(v) })
+                res.json({ ok: true, ...await cb(v) })
             } catch (error) {
                 res.status(500).json({ ok: false, error })
             }
@@ -46,15 +46,15 @@ function query (route : string, cb : (q: string) => any) {
 
 query('/npc', q => getNpc(q))
 
-api.get('/search_text', function(req, res) {
-    ensureArg(req, res, 'q', v => {
-        res.json({ ok: true, ...searchText(v, req.query['lang'] as string) })
+api.get('/search_text', async function(req, res) {
+    ensureArg(req, res, 'q', async v => {
+        res.json({ ok: true, ...await searchText(v, req.query['lang'] as string) })
     })
 })
 
-api.get('/search_dialogs', function(req, res) {
-    ensureArg(req, res, 'q', v => {
-        res.json({ ok: true, result: searchDialogContaining(v) })
+api.get('/search_dialogs', async function(req, res) {
+    ensureArg(req, res, 'q', async v => {
+        res.json({ ok: true, result: await searchDialogContaining(v) })
     })
 })
 
@@ -62,27 +62,31 @@ query('/search_talk', q => searchTalkByDialog(q))
 query('/get_talk', q => getTalk(q))
 query('/get_quests', q => getQuests(q))
 
-api.get('/get_text', function(req, res) {
-    ensureArg(req, res, 't', v => {
-        res.json({ ok: true, text: getText(v) })
+api.get('/get_text', async function(req, res) {
+    ensureArg(req, res, 't', async v => {
+        res.json({ ok: true, text: await getText(v) })
     })
 })
 
-api.get('/get_dialog', function(req, res) {
-    ensureArg(req, res, 't', v => {
-        res.json({ ok: true, dialog: getDialog(v) })
+api.get('/get_dialog', async function(req, res) {
+    ensureArg(req, res, 't', async v => {
+        res.json({ ok: true, dialog: await getDialog(v) })
     })
 })
 
-api.get('/dialog_set', function(req, res) {
-    ensureArg(req, res, 't', v => {
-        res.json({ ok: true, dialogs: getAllDialogs(v) })
+api.get('/dialog_set', async function(req, res) {
+    ensureArg(req, res, 't', async v => {
+        res.json({ ok: true, dialogs: await getAllDialogs(v) })
     })
 })
 
 api.get('/version', async function (req, res) {
     let __version__ = 'dev'
-    return res.json({ ok: true, version: __version__ })
+    return res.json({ 
+        ok: true, 
+        version: __version__,
+        dataVersion: await git.getDataVersion()
+    })
 })
 
 api.get('/introspect', async function (req, res) {
@@ -99,6 +103,7 @@ api.get('/introspect', async function (req, res) {
         ok: true,
         buildDate: __buildDate__,
         version: __version__,
+        dataVersion: await git.getDataVersion(),
         branch: __branch__,
         vcs: git.gitAvailable(),
         status: data,

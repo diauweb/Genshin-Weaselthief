@@ -1,15 +1,14 @@
-import fse from 'fs-extra'
-import path from 'path'
+import { getJSON } from './util'
 
-async function readMap (lang: string) {
-    return JSON.parse((await (fse.readFile(path.join('.', 'GenshinData', 'TextMap', `TextMap${lang}.json`)))).toString()) 
+function readMap (lang: string) {
+    return getJSON('TextMap', `TextMap${lang}.json`)
 }
 
-let chsMap = await readMap('CHS')
-let jpMap  = await readMap('JP')
-let enMap  = await readMap('EN') 
+let chsMap = readMap('CHS')
+let jpMap  = readMap('JP')
+let enMap  = readMap('EN') 
 
-export function searchText (text: string, lang: string) {
+export async function searchText (text: string, lang: string) {
     console.time(`search key: ${lang} ${text}`)
     let mmap
     switch (lang) {
@@ -21,6 +20,8 @@ export function searchText (text: string, lang: string) {
         default: 
             mmap = chsMap
     }
+
+    mmap = await mmap()
 
     const ret = []
     let more = false
@@ -44,6 +45,6 @@ export function searchText (text: string, lang: string) {
     return { result: ret, more }
 }
 
-export function getText (text: string) {
-    return { CHS: chsMap[text], EN: enMap[text], JP: jpMap[text] }
+export async function getText (text: string) {
+    return { CHS: (await chsMap())[text], EN: (await enMap())[text], JP: (await jpMap())[text] }
 }

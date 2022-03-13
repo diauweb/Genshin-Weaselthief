@@ -1,13 +1,19 @@
 <script>
-    import { params, url } from '@roxi/routify'
+    import { goto, params, url } from '@roxi/routify'
     import { lang } from '../lang-store.js'
     import { onDestroy } from 'svelte'
 
     let data = new Promise((resolve) => resolve({ json: () => [] }))
+    let input = {}
     function update () {
         if ($params.keyword) {
             data = fetch(`/api/search_text?q=${encodeURIComponent($params.keyword)}&lang=${$lang}`)
         }
+    }
+
+    function search () {
+        $goto('/search_text', { keyword: input.value })
+        update()
     }
     
     const unsub = lang.subscribe(() => update())
@@ -15,7 +21,11 @@
     onDestroy(unsub)
 </script>
 
-<input type="search" value="{$params.keyword}" disabled>
+<div class="search">
+    <fluent-text-field type="search" bind:this={input} value={$params.keyword}></fluent-text-field>
+    <fluent-button on:click={search}>Search</fluent-button>
+</div>
+
 <p>Show up to 100 items in registry</p>
 
 {#await data}
@@ -45,8 +55,10 @@
     <p>failed loading data</p>
 {/await}
 
+
 <style>
-    input {
-        width: 500px
+    .search {
+        display: flex;
+        align-items: center;
     }
 </style>

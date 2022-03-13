@@ -7,7 +7,11 @@
         branch: string,
         vcs: boolean,
         status: Record<string, string>,
-        commit: Record<string, any>
+        commit: Record<string, any>,
+        dataVersion: {
+            fullVersion: string,
+            version: string
+        }
     }
     onMount(async function () {
         data = await (await fetch('/api/introspect')).json()
@@ -19,7 +23,9 @@
 <p>Version: {data.version}</p>
 <p>Build Date: {data.buildDate}</p>
 <p>Branch: {data.branch}</p>
+<p>Data Version: {data.dataVersion.fullVersion}</p>
 {#if data.vcs}
+<fluent-button>Reset to master</fluent-button>
 <p>Data:</p>
 <pre>{ JSON.stringify(data.status, null, 2)}</pre>
 <pre>{ JSON.stringify(data.commit, null, 2)}</pre>

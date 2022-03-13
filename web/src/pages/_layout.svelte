@@ -3,33 +3,78 @@
     import { lang } from '../lang-store.js'
     
     let v
-    fetch('/api/version').then(e => e.json().then(k => v = k.version))
+    let dv = { version: '?' }
+    fetch('/api/version').then(e => e.json().then(k => [v, dv] = [k.version, k.dataVersion]))
 </script>
-<h1>Genshin-WeaselThief</h1>
-<p style="margin-top: -0.67em;">{v}</p>
-<nav>
-    Navigation:
-    <a href="{$url("/")}">Home</a> 
-    <a href="{$url("/introspect")}">Introspect</a>
-    <b> | </b>
-    Language:
-    <div class="lang-box">
-        <span on:click="{() => lang.set('CHS')}" class:active="{$lang === 'CHS'}">CHS</span>
-        <span on:click="{() => lang.set('EN')}"  class:active="{$lang === 'EN'}">EN</span>
-        <span on:click="{() => lang.set('JP')}"  class:active="{$lang === 'JP'}">JP</span>
+
+<header>
+    <div class="header-container">
+        <div class="header-heading">
+            <h1>Genshin-WeaselThief</h1>
+            <fluent-badge>{v}</fluent-badge>
+            <fluent-badge>{dv.version}</fluent-badge>
+        </div>
+        <nav>
+            <div>
+                <a href="{$url("/")}">Home</a> 
+                <a href="{$url("/introspect")}">Introspect</a>
+            </div>
+            <div class="lang-box">
+                <span on:click="{() => lang.set('CHS')}" class:active="{$lang === 'CHS'}">CHS</span>
+                <span on:click="{() => lang.set('EN')}"  class:active="{$lang === 'EN'}">EN</span>
+                <span on:click="{() => lang.set('JP')}"  class:active="{$lang === 'JP'}">JP</span>
+            </div>
+        </nav>
     </div>
-</nav>
+</header>
+
 <main>
     <slot></slot>
 </main>
 
 <style>
+
+header {
+    background: #f2f0d8;
+    width: 100%;
+}
+
+header .header-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0 .8em;
+}
+
+.header-container .header-heading {
+    display: flex;
+    align-items: center;
+}
+
+.header-heading h1 {
+    font-size: 1.2em;
+}
+
+.header-heading fluent-badge {
+    --badge-fill-primary: #00FF00;
+    --badge-fill-danger: #FF0000;
+    --badge-color-light: #FFFFFF;
+    --badge-color-dark: #000000;
+}
+
 nav {
     margin: 1em 0;
+    display: flex;
+}
+
+main {
+    margin: 1em;
 }
 
 .lang-box {
     display: inline-block;
+    margin: 0 .5em;
 }
 
 .lang-box .active {

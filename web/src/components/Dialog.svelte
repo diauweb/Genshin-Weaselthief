@@ -20,7 +20,7 @@
             <Translated id={data.TalkContentTextMapHash}/>
         </summary>
         <p>
-            <b>Id</b> <a href="#" on:click="{() => gotoAndRefresh(data.Id)}">{data.Id}</a>
+            <b>Id</b> <a href={"#"} on:click="{() => gotoAndRefresh(data.Id)}">{data.Id}</a>
         </p>
         <p>
             <b>TalkRole</b> <Role role={data?.TalkRole}></Role>
@@ -37,7 +37,7 @@
         <p>
             <b>Next Dialog</b> 
             {#each data.NextDialogs as d}
-                <a href="#" on:click="{() => gotoAndRefresh(d)}">{d} </a> 
+                <a href={"#"} on:click="{() => gotoAndRefresh(d)}">{d} </a> 
             {/each}
         </p>
     </details>

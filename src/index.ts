@@ -7,13 +7,16 @@ import { getQuests } from './quest.js'
 import { getNpc } from './role.js'
 import { getHistoryText, getText, searchText } from './text.js'
 import { getVersion, setVersion } from './version.js'
-
+import morgan from 'morgan'
 
 const app = express()
 const fallbackIndex = (await fse.readFile(path.resolve('./web/public/index.html'))).toString()
+const accessLogStream = fse.createWriteStream(path.join('.', 'access.log'), { flags: 'a' })
 
 app.use(express.static(path.resolve('web', 'public')))
 app.use(express.json())
+app.use(morgan('common', { stream: accessLogStream }))
+app.use(morgan('dev'))
 
 if (git.gitAvailable()) {
     setVersion((await git.getVersioningCommit()).hash)

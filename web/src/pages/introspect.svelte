@@ -23,7 +23,6 @@
                 <GitCommit data={d} />
             {/each}
         </fluent-accordion>
-        <pre>{JSON.stringify(data.commit, null, 2)}</pre>
     {:else}
         <p><i>Data file is not in Version Control</i></p>
     {/if}

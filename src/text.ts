@@ -1,5 +1,4 @@
-import { getJSON } from './util.js'
-import { getFile } from './git.js'
+import { getContent, getJSON } from './util.js'
 import path from 'path'
 
 function readMap (lang: string) {
@@ -52,12 +51,12 @@ export async function getText (text: string) {
 }
 
 export async function getHistoryText (text: string, hs: string) {
-    console.time(`get history text ${text}`)
     try {
         async function mp (lang: string) {
             const p = path.join('TextMap', `TextMap${lang}.json`)
-            return (await getFile(p, hs))?.toString()!
+            return getContent(p, hs)
         }
+        
         let chsMap = JSON.parse(await mp('CHS'))
         let enMap = JSON.parse(await mp('EN'))
         let jpMap = JSON.parse(await mp('JP'))
@@ -67,7 +66,5 @@ export async function getHistoryText (text: string, hs: string) {
     } catch (e) {
         console.log(e)
         return { CHS: 'Error while getting text', EN: '', JP: ''}
-    } finally {
-        console.timeEnd(`get history text ${text}`)
     }
 }

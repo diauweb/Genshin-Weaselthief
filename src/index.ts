@@ -8,6 +8,7 @@ import { getNpc } from './role.js'
 import { getHistoryText, getText, searchText } from './text.js'
 import { getVersion, setVersion } from './version.js'
 import morgan from 'morgan'
+import { getAllDocuments, getDocument } from './document.js'
 
 const app = express()
 const fallbackIndex = (await fse.readFile(path.resolve('./web/public/index.html'))).toString()
@@ -70,6 +71,7 @@ api.get('/search_dialogs', async function(req, res) {
 query('/search_talk', q => searchTalkByDialog(q))
 query('/get_talk', q => getTalk(q))
 query('/get_quests', q => getQuests(q))
+query('/get_document', q => getDocument(q))
 
 api.get('/get_text', async function(req, res) {
     ensureArg(req, res, 't', async v => {
@@ -93,6 +95,10 @@ api.get('/dialog_set', async function(req, res) {
     ensureArg(req, res, 't', async v => {
         res.json({ ok: true, dialogs: await getAllDialogs(v) })
     })
+})
+
+api.get('/documents', async function(req, res) {
+    res.json({ ok: true, ...await getAllDocuments()})
 })
 
 api.get('/version', async function (req, res) {
@@ -128,7 +134,7 @@ api.get('/introspect', async function (req, res) {
 
 api.put('/set_version', async function (req, res) {
     setVersion(req.body.version)
-    console.log(getVersion())
+    console.log('running on data version', getVersion())
 })
 
 app.use('/api', api)

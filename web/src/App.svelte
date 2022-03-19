@@ -11,6 +11,7 @@
    		fluentAccordionItem,
 		fluentSelect,
     	fluentOption,
+		fluentProgressRing,
 	} from "@fluentui/web-components";
 
 	provideFluentDesignSystem().register(
@@ -21,6 +22,7 @@
 		fluentAccordionItem(),
 		fluentSelect(),
 		fluentOption(),
+		fluentProgressRing(),
 	);
 
 </script>

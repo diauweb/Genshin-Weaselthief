@@ -16,7 +16,7 @@ const accessLogStream = fse.createWriteStream(path.join('.', 'access.log'), { fl
 app.use(express.static(path.resolve('web', 'public')))
 app.use(express.json())
 app.use(morgan('common', { stream: accessLogStream }))
-app.use(morgan('dev'))
+app.use(morgan('dev', { skip: (req) => req.path == '/get_text' }))
 
 if (git.gitAvailable()) {
     setVersion((await git.getVersioningCommit()).hash)

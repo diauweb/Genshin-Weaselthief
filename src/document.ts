@@ -9,8 +9,8 @@ export async function getDocument (name: string, _sha?: string) {
     return {
         text: {
             CHS: await getContent(`Readable/CHS/${n}.txt`, sha!),
-            EN: await getContent(`Readable/EN/${n}.txt`, sha!),
-            JP: await getContent(`Readable/JP/${n}.txt`, sha!),
+            EN: await getContent(`Readable/EN/${n}_EN.txt`, sha!),
+            JP: await getContent(`Readable/JP/${n}_JP.txt`, sha!),
         }
     }
 }

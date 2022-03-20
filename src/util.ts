@@ -5,7 +5,9 @@ import { getFile } from './git.js'
 import { getVersion } from './version.js'
 
 let jsons = new Map<string, Promise<any>>()
-let hfiles = new LRUCache<string, Promise<string>>({ max: 200 })
+let hfiles = new LRUCache<string, Promise<string>>({ 
+    max: 9
+})
 
 export function reset () {
     jsons.clear()

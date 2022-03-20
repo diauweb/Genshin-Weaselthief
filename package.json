@@ -32,9 +32,11 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "dev": "run-p dev:*",
+    "dev": "run-p dev:watch dev:start dev:web",
+    "dev:debug": "run-p dev:watch dev:web dev:start-inspect",
     "dev:watch": "tsc -w",
     "dev:start": "nodemon --watch dist dist/index.js",
+    "dev:start-inspect": "nodemon --inspect --watch dist dist/index.js",
     "dev:web": "cd web && yarn dev"
   }
 }

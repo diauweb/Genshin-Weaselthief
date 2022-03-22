@@ -6,7 +6,7 @@ import { getVersion } from './version.js'
 
 let jsons = new Map<string, Promise<any>>()
 let hfiles = new LRUCache<string, Promise<string>>({ 
-    max: 9
+    max: 12
 })
 
 export function reset () {

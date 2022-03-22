@@ -2,7 +2,8 @@
     import { goto, params, url } from '@roxi/routify'
     import { lang } from '../lang-store.js'
     import { onDestroy } from 'svelte'
-
+    import TextRenderer from '../components/TextRenderer.svelte'
+    
     let data = new Promise((resolve) => resolve({ json: () => [] }))
     let input = {}
     function update () {
@@ -40,7 +41,7 @@
                             {e.id}
                         </a>
                     </b> 
-                    {e.value}
+                    <TextRenderer text={e.value} />
                 </li>
             {:else}
                 No matched data

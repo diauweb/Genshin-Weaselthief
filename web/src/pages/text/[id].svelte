@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { goto } from "@roxi/routify";
     import { getCommits } from "../../version-util.js";
+    import TextRenderer from '../../components/TextRenderer.svelte'
 
     export let id;
     let text = { CHS: "", EN: "", JP: "" };
@@ -41,9 +42,9 @@
 </script>
 
 <h2>{id} Text:</h2>
-<p>{text.CHS}</p>
-<p>{text.EN}</p>
-<p>{text.JP}</p>
+<p><TextRenderer text={text.CHS} /></p>
+<p><TextRenderer text={text.EN}/></p>
+<p><TextRenderer text={text.JP}/></p>
 
 <h2>Reverse Search</h2>
 <ul>

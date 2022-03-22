@@ -26,27 +26,35 @@
     <tr><th>ShowType</th><td>{main.ShowType}</td></tr>
 </table>
 <h2>Sub Quests</h2>
-{#each quests as q}
-<details>
-    <summary>{q.Order} <Translated id={q.DescTextMapHash}/></summary>
-    <table>
-        <tr><th>Id</th><td>{q.SubId}</td></tr>
-        <tr><th>Order</th><td>{q.Order}</td></tr>
-        <tr><th>Description</th><td><Translated id={q.DescTextMapHash}/></td></tr>
-        <tr><th>StepDesc</th><td><Translated id={q.StepDescTextMapHash}/></td></tr>
-        <tr><th>GuideDesc</th><td><Translated id={q.GuideTipsTextMapHash}/></td></tr>
-    </table>
-    {#if q.ExclusiveNpcList.length > 0}
-    <p>Exclusive Npcs:</p>
-    <div style="margin: 5px; background: #fdfdfd;">
-        {#each q.ExclusiveNpcList as npc}
-        <Role id={npc} />
-        {/each}    
-    </div>
-    {/if}
-</details>
-
-{/each}
+<fluent-accordion>
+    {#each quests as q}
+    <fluent-accordion-item>
+        <span slot="heading">{q.Order} <Translated id={q.DescTextMapHash}/></span>
+        <table>
+            <tr><th>Id</th><td>{q.SubId}</td></tr>
+            <tr><th>Order</th><td>{q.Order}</td></tr>
+            <tr><th>Description</th><td><Translated id={q.DescTextMapHash}/></td></tr>
+            <tr><th>StepDesc</th><td><Translated id={q.StepDescTextMapHash}/></td></tr>
+            <tr><th>GuideDesc</th><td><Translated id={q.GuideTipsTextMapHash}/></td></tr>
+        </table>
+        {#if q.ExclusiveNpcList.length > 0}
+        <p>Exclusive Npcs:</p>
+        <div style="margin: 5px; background: #fdfdfd;">
+            {#each q.ExclusiveNpcList as npc}
+            <Role id={npc} />
+            {/each}    
+        </div>
+        {/if}
+    </fluent-accordion-item>
+    
+    {/each}
+</fluent-accordion>
 {:else}
 <i>Loading</i>
 {/if}
+
+<style>
+    th {
+        text-align: right;
+    }
+</style>

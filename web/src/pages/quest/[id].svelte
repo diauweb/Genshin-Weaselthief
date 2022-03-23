@@ -24,6 +24,14 @@
     <tr><th>Title</th><td><Translated id={main.TitleTextMapHash}/></td></tr>
     <tr><th>Description</th><td><Translated id={main.DescTextMapHash}/></td></tr>
     <tr><th>ShowType</th><td>{main.ShowType}</td></tr>
+    <tr>
+        <th>Honey Impact</th>
+        <td>
+            <a href={`https://genshin.honeyhunterworld.com/db/q/q_${main.Id}/`} target="_blank">
+                q_{main.Id}
+            </a>
+        </td>
+    </tr>
 </table>
 <h2>Sub Quests</h2>
 <fluent-accordion>

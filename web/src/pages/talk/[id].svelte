@@ -32,7 +32,9 @@
 <p><b>ActiveMode: </b>{talk.ActiveMode}</p>
 <p><b>InitDialog: </b>{talk.InitDialog}</p>
 <p><b>PerformCfg: </b>{talk.PerformCfg}</p>
+{#if talk.QuestId}
 <p><b>QuestId: </b><a href="/quest/{talk.QuestId}">{talk.QuestId}</a></p>
+{/if}
 
 <h3>Dialogs</h3>
 <button on:click="{allDialogs}">Load all dialogs</button>

@@ -41,7 +41,7 @@
                             {e.id}
                         </a>
                     </b> 
-                    <TextRenderer text={e.value} />
+                    <TextRenderer text={e.value} highlight={$params.keyword} />
                 </li>
             {:else}
                 No matched data

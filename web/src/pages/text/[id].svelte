@@ -27,6 +27,21 @@
         );
     }
 
+    function searchReminders() {
+        if (loading) return;
+        loading = true;
+        fetch(`/api/search_reminders?q=${encodeURIComponent(id)}`).then((v) =>
+            v.json().then((e) => {
+                if (e.result) {
+                    $goto(`/reminder/${e.result}`);
+                } else {
+                    alert("No reminders were found");
+                    loading = false;
+                }
+            })
+        );
+    }
+
     let htext = { CHS: "", EN: "", JP: "" };
     let selector;
     let loadButton;
@@ -50,6 +65,9 @@
 <ul>
     <li>
         <a href={"#"} on:click={searchDialogs}>Search {id} in dialogs</a>
+    </li>
+    <li>
+        <a href={"#"} on:click={searchReminders}>Search {id} in reminders</a>
     </li>
     <li>Search {id} in ...</li>
 </ul>

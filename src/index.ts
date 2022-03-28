@@ -1,7 +1,7 @@
 import express from 'express'
 import fse from 'fs-extra'
 import path from 'path'
-import { getAllDialogs, getDialog, getTalk, searchDialogContaining, searchTalkByDialog } from './dialog.js'
+import { getAllDialogs, getDialog, getReminder, getTalk, searchDialogContaining, searchReminder, searchTalkByDialog } from './dialog.js'
 import * as git from './git.js'
 import { getQuests } from './quest.js'
 import { getNpc } from './role.js'
@@ -72,6 +72,8 @@ query('/search_talk', q => searchTalkByDialog(q))
 query('/get_talk', q => getTalk(q))
 query('/get_quests', q => getQuests(q))
 query('/get_document', q => getDocument(q))
+query('/search_reminders', q => searchReminder(q))
+query('/get_reminder', q => getReminder(q))
 
 api.get('/get_text', async function(req, res) {
     ensureArg(req, res, 't', async v => {

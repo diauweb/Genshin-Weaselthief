@@ -3,6 +3,8 @@ import { getJSON } from "./util.js"
 const dialogTable = getJSON('ExcelBinOutput', 'DialogExcelConfigData.json')
 const talkTable = getJSON('ExcelBinOutput', 'TalkExcelConfigData.json')
 
+const reminderTable = getJSON('ExcelBinOutput', 'ReminderExcelConfigData.json')
+
 export async function searchDialogContaining (mapId: string) {
     console.time(`search dialog ${mapId}`)
     const rst = []
@@ -97,4 +99,26 @@ export async function getTalk (id: string) {
             return { result: o }
         }
     }
+}
+
+export async function getReminder (id: string) {
+    const table = await reminderTable()
+    for (const k of table) {
+        if (k.Id == id) {
+            return { result: k }
+        }
+    }
+
+    return { result: null }
+}
+
+export async function searchReminder (id: string) {
+    const table = await reminderTable()
+    for (const k of table) {
+        if (k.SpeakerTextMapHash == id || k.ContentTextMapHash == id) {
+            return { result: k.Id }
+        }
+    }
+    
+    return { result: null }
 }

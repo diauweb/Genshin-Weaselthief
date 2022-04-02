@@ -1,4 +1,5 @@
 import { getContent, getJSON } from './util.js'
+import { compile, run } from './script/index.js'
 import path from 'path'
 
 function readMap (lang: string) {
@@ -10,7 +11,6 @@ let jpMap  = readMap('JP')
 let enMap  = readMap('EN') 
 
 export async function searchText (text: string, lang: string) {
-    console.time(`search key: ${lang} ${text}`)
     let mmap
     switch (lang) {
         case 'EN':
@@ -27,8 +27,31 @@ export async function searchText (text: string, lang: string) {
     const ret = []
     let more = false
     let cnt = 0
-    for (const [k, v] of Object.entries(mmap)) {
-        if ((v as string).includes(text)) {
+    type MatcherBinding = {
+        $: string,
+        key?: string
+    }
+
+    const matcherUtils = {
+        has (v: string) : boolean {
+            //@ts-ignore
+            return this['$'].includes(v)
+        }
+    }
+
+    let matcher: (b: MatcherBinding) => boolean = ({ $ }) => $.includes(text)
+
+    if (text.startsWith('?')) {
+        const ast = compile(text.substring(1))
+        matcher = (binding) => {
+            const rst = run(ast, binding)
+            if (rst instanceof RegExp) return rst.test(binding.$)
+            else return rst
+        }
+    }
+    
+    for (const [k, v] of Object.entries<string>(mmap)) {
+        if (matcher({ key: k, $: v, ...matcherUtils })) {
             ret.push({
                 id: k,
                 value: v
@@ -42,7 +65,6 @@ export async function searchText (text: string, lang: string) {
         }
     }
 
-    console.timeEnd(`search key: ${lang} ${text}`)
     return { result: ret, more }
 }
 

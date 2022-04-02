@@ -4,6 +4,7 @@ import path from 'path'
 import { getFile } from './git.js'
 import { getVersion } from './version.js'
 
+
 let jsons = new Map<string, Promise<any>>()
 let hfiles = new LRUCache<string, Promise<string>>({ 
     max: 12

@@ -58,7 +58,16 @@ query('/npc', q => getNpc(q))
 
 api.get('/search_text', async function(req, res) {
     ensureArg(req, res, 'q', async v => {
-        res.json({ ok: true, ...await searchText(v, req.query['lang'] as string) })
+        try {
+            console.time(`search ${req.query['lang']} ${v}`)
+            const rst = await searchText(v, req.query['lang'] as string)
+            res.json({ ok: true, ...rst })
+        } catch (e) {
+            console.log(e)
+            res.json({ ok: false, error: e })
+        } finally {
+            console.timeEnd(`search ${req.query['lang']} ${v}`)
+        }
     })
 })
 
@@ -145,5 +154,5 @@ app.use('*', function (req, res) {
 })
 
 app.listen(8081, () => {
-    console.log('app serving at http://localhost:8081')
+    console.log(`app serving at http://localhost:${8081}`)
 })

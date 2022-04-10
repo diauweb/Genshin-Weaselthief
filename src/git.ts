@@ -48,3 +48,7 @@ export async function getFile (name: string, commit: string) : Promise<Buffer | 
     const resp = await git.binaryCatFile(['blob', v])
     return resp
 }
+
+export function getHandle () {
+    return git
+}

@@ -38,5 +38,9 @@
     "dev:start": "nodemon --watch dist dist/index.js",
     "dev:start-inspect": "nodemon --inspect --watch dist dist/index.js",
     "dev:web": "cd web && yarn dev"
+  },
+  "optionalDependencies": {
+    "exceljs": "^4.3.0",
+    "progress": "^2.0.3"
   }
 }

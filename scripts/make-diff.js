@@ -1,6 +1,7 @@
 import ExcelJS from 'exceljs'
 import ProgressBar from 'progress'
 import fs from 'fs'
+import deepEqual from 'deep-equal'
 
 // Please build main project before use
 import { getHandle } from '../dist/git.js'
@@ -13,11 +14,15 @@ import { getContent } from '../dist/util.js'
 
 // const [v1, v2] = [process.argv[2], process.args[3]]
 
-const [v1, v2] = ["f6b76a7c958c121e43d4612d7d54e327066d2e73", "ab38c0a0ba6379e84c3ab31752366ce309519b42"]
+const [v1, v2] = ["ab38c0a0ba6379e84c3ab31752366ce309519b42", "ebb117f78dab56e704853b71fa60f45ee2cefe79"]
 
 const git = getHandle()
 const workbook = new ExcelJS.Workbook();
 const mainSheet = workbook.addWorksheet('Summary')
+
+const report = {
+}
+
 async function getVersion(sha) {
     const log = await git.log([sha])
     const shortver = /\d+\.\d+\.\d+/.exec(log.latest?.message)?.[0] ?? '???'
@@ -82,6 +87,19 @@ async function addDiff(tableName, dispName, masterKey, compares) {
     let v1t = JSON.parse(await getContent(tableName, v1))
     let v2t = JSON.parse(await getContent(tableName, v2))
     
+    // lowercase all keys to ignore the cAsE changes
+    v1t = v1t.map(e => {
+        const obj = {}
+        Object.keys(e).forEach(k => obj[k.toLowerCase()] = e[k])
+        return obj
+    })
+    v2t = v2t.map(e => {
+        const obj = {}
+        Object.keys(e).forEach(k => obj[k.toLowerCase()] = e[k])
+        return obj
+    })
+    masterKey = masterKey.toLowerCase()
+
     let v1o = {}
     let v2o = {}
     v1t.forEach(e => v1o[e[masterKey]] = e)
@@ -100,10 +118,17 @@ async function addDiff(tableName, dispName, masterKey, compares) {
             const v = v1o[o]
 
             let dirty = false
-            for (const ck of compares) {
-                if (s[ck] !== v[ck]) {
+            for (const kk of compares) {
+                const ck = kk.toLowerCase()
+                if (!deepEqual(s[ck], v[ck])) {
                     dirty = true
                     break
+                }
+                if (ck.endsWith("textmaphash")) {
+                    if (v2l[s[ck]] !== v1l[v[ck]]) {
+                        dirty = true
+                        break
+                    }
                 }
             }
 
@@ -129,8 +154,9 @@ async function addDiff(tableName, dispName, masterKey, compares) {
     ]
 
     for (const k of diff) {
-        const vs = compares.map(e => {
-            if (e.endsWith("TextMapHash")) {
+        const vs = compares.map(ek => {
+            const e = ek.toLowerCase()
+            if (e.endsWith("textmaphash")) {
                 const t = k.type === 'orig' ? v1l : v2l
                 return t[k.value[e]]
             } else {
@@ -140,6 +166,10 @@ async function addDiff(tableName, dispName, masterKey, compares) {
         const row = sheet.addRow([k.type, k.id, ...vs])
         row.getCell(1).fill = fillType[k.type]
     }
+    
+    const tableKey = tableName.replace(/.*\/?(.*)\.json/, '$1')
+    report[`len_table_${tableKey}`] = [v1t.length, v2t.length]
+    report[`diff_table_${tableKey}`] = [diff.length]
 }
 
 
@@ -158,6 +188,9 @@ async function createSummaryPage() {
     add('commit', v1, v2)
     add('version', o1.ver, o2.ver)
     add('commit_message', o1.msg, o2.msg)
+    for (const k of Object.keys(report)) {
+        add(k, ...report[k])
+    }
 }
 
 async function main() {

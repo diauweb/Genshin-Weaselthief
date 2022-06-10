@@ -43,14 +43,86 @@
         ]
     ],
     [   
+        "ExcelBinOutput/DialogExcelConfigData.json",
+        "Dialog",
+        "Id",
+        [
+            "TalkContentTextMapHash",
+            "TalkTitleTextMapHash",
+            "TalkRoleNameTextMapHash"
+        ]
+    ],
+    [   
         "ExcelBinOutput/LoadingTipsExcelConfigData.json",
-        "LoadingTips",
+        "Loading Tips",
         "Id",
         [
             "StageId",
             "MinLevel",
             "TipsTitleTextMapHash",
             "TipsDescTextMapHash"
+        ]
+    ],
+    [   
+        "ExcelBinOutput/NpcExcelConfigData.json",
+        "NPC",
+        "Id",
+        [
+            "NameTextMapHash"
+        ]
+    ],
+    [   
+        "ExcelBinOutput/DocumentExcelConfigData.json",
+        "Documents",
+        "Id",
+        [
+            "TitleTextMapHash",
+            "ContentLocalizedId",
+            "PreviewPath",
+            "VideoPath"
+        ]
+    ],
+    [
+        "ExcelBinOutput/AchievementExcelConfigData.json",
+        "Achievements",
+        "Id",
+        [
+            "TitleTextMapHash",
+            "DescTextMapHash",
+            "IsShow",
+            "OrderId",
+            "FinishRewardId",
+            "Progress"
+        ]
+    ],
+    [
+        "ExcelBinOutput/MailExcelConfigData.json",
+        "Mail",
+        "Id",
+        [
+            "ExpireDays",
+            "SenderTextMapHash",
+            "TitleTextMapHash",
+            "ContentTextMapHash"
+        ]
+    ],
+    [   
+        "ExcelBinOutput/MonsterSpecialNameExcelConfigData.json",
+        "Monster Special Names",
+        "SpecialNameID",
+        [
+            "SpecialNameLabID",
+            "IsInRandomList",
+            "SpecialNameTextMapHash"
+        ]
+    ],
+    [   
+        "ExcelBinOutput/MonsterTitleExcelConfigData.json",
+        "Monster Titles",
+        "TitleID",
+        [
+            "TitleNameTextMapHash",
+            "IsInverted"
         ]
     ]
 ]

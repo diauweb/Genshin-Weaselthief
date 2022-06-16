@@ -28,6 +28,10 @@ export async function getVersioningCommit () {
     return (await git.log({ file: 'TextMap/', maxCount: 1 })).all[0]
 }
 
+export async function getAllVersions () {
+    return (await git.log({ file: 'TextMap/TextMapCHS.json' })).all;
+}
+
 export async function getDataVersion () {
     if (!gitOk) return { fullVersion: 'live', version: 'live' }
     const log = await git.log([getVersion()!])

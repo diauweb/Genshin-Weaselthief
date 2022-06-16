@@ -9,8 +9,11 @@ import { getHistoryText, getText, searchText } from './text.js'
 import { getVersion, setVersion } from './version.js'
 import morgan from 'morgan'
 import { getAllDocuments, getDocument } from './document.js'
+import * as db from './db.js'
 
-const app = express()
+await db.initDatabase();
+
+const app = express();
 const fallbackIndex = (await fse.readFile(path.resolve('./web/public/index.html'))).toString()
 const accessLogStream = fse.createWriteStream(path.join('.', 'access.log'), { flags: 'a' })
 

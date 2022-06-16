@@ -1,0 +1,12 @@
+[
+    {
+        "match": "<=1.5.1",
+        "filename": "TextMap/TextCHS.json",
+        "type": "all"
+    },
+    {
+        "match": "*",
+        "filename": "TextMap/TextMapCHS.json",
+        "type": "all"
+    }
+]

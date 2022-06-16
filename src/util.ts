@@ -6,7 +6,7 @@ import { getVersion } from './version.js'
 
 
 let jsons = new Map<string, Promise<any>>()
-let hfiles = new LRUCache<string, Promise<string>>({ 
+let hfiles = new LRUCache<string, Promise<string | undefined>>({ 
     max: 12
 })
 
@@ -41,7 +41,7 @@ export function getJSON(...pa : string[]) : () => Promise<any> {
     }
 }
 
-export function getContent (p: string, sha: string) : Promise<string> {
+export function getContent (p: string, sha: string) : Promise<string | undefined> {
     if (!sha) {
         throw 'sha'
     }
@@ -53,7 +53,9 @@ export function getContent (p: string, sha: string) : Promise<string> {
     }
 
     async function getter (p: string, sha: string) {
-        return (await getFile(p, sha))?.toString()!
+        const f = await getFile(p, sha);
+        if (f) return f.toString();
+        else return undefined;
     }
 
     const g = getter(p, sha)

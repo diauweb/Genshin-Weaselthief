@@ -1,11 +1,8 @@
-import { getJSON } from "./util.js";
-
-const roles = getJSON('ExcelBinOutput', 'NpcExcelConfigData.json')
+import { currentOid, findOne } from "./db.js";
 
 export async function getNpc (v : string) {
-    for (const k of await roles()) {
-        if (k.Id == v) {
-            return { result: k }
-        }
-    }
+    return findOne("NPC", {
+        _ver: currentOid(),
+        Id: parseInt(v)
+    });
 }

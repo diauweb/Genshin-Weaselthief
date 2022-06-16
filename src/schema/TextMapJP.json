@@ -1,0 +1,12 @@
+[
+    {
+        "match": "<=1.5.1",
+        "filename": "TextMap/TextJA.json",
+        "type": "all"
+    },
+    {
+        "match": "*",
+        "filename": "TextMap/TextMapJP.json",
+        "type": "all"
+    }
+]

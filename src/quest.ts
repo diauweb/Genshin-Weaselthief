@@ -1,3 +1,4 @@
+import { currentOid, find, findOne } from './db.js'
 import { getJSON } from './util.js'
 
 const quest = getJSON("ExcelBinOutput", "QuestExcelConfigData.json")
@@ -5,19 +6,14 @@ const mainQuest = getJSON("ExcelBinOutput", "MainQuestExcelConfigData.json")
 
 
 export async function getQuests (id: string) {
-    const rst = []
-    let main
-    for (const q of await quest()) {
-        if (q.MainId == id) {
-            rst.push(q)
-        }
-    }
+    const main = await findOne("MainQuest", {
+        _ver: currentOid(),
+        Id: parseInt(id)
+    });
 
-    for(const q of await mainQuest()) {
-        if(q.Id == id) {
-            main = q
-            break
-        }
-    }
+    const rst = await find ("Quest", {
+        _ver: currentOid(),
+        MainId: parseInt(id)
+    })
     return { mainQuest: main, subQuests: rst }
 }

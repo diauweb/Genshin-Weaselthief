@@ -53,13 +53,13 @@
         {#each data.result as e}
             <li>
                 <b>
-                    <a href={$url(`/text/${e.id}`)}>
-                        {e.id}
+                    <a href={$url(`/text/${e.hash}`)}>
+                        {e.hash}
                     </a>
                 </b>
                 <TextRenderer 
-                    text={e.value} 
-                    highlight={$params.keyword.startsWith("?") ? undefined : $params.keyword} 
+                    text={e[$lang]}
+                    highlight={$params.keyword} 
                 />
             </li>
         {:else}

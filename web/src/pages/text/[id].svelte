@@ -5,7 +5,7 @@
     import TextRenderer from '../../components/TextRenderer.svelte'
 
     export let id;
-    let text = { CHS: "", EN: "", JP: "" };
+    let text = { cn: "", en: "", jp: "" };
     onMount(async function () {
         let k = await fetch(`/api/get_text?t=${id}`);
         text = (await k.json()).text;
@@ -42,7 +42,7 @@
         );
     }
 
-    let htext = { CHS: "", EN: "", JP: "" };
+    let htext = { cn: "", en: "", jp: "" };
     let selector;
     let loadButton;
     function loadHistory() {
@@ -57,9 +57,9 @@
 </script>
 
 <h2>{id} Text:</h2>
-<p><TextRenderer text={text.CHS} /></p>
-<p><TextRenderer text={text.EN}/></p>
-<p><TextRenderer text={text.JP}/></p>
+<p><TextRenderer text={text.cn} /></p>
+<p><TextRenderer text={text.en}/></p>
+<p><TextRenderer text={text.jp}/></p>
 
 <h2>Reverse Search</h2>
 <ul>
@@ -80,7 +80,7 @@
         {/each}
     </fluent-select>
     <fluent-button on:click={loadHistory} bind:this={loadButton}>Load</fluent-button>
-    <p>{htext.CHS}</p>
-    <p>{htext.EN}</p>
-    <p>{htext.JP}</p>
+    <p>{htext.cn}</p>
+    <p>{htext.en}</p>
+    <p>{htext.jp}</p>
 {/await}

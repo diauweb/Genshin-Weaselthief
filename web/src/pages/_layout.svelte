@@ -21,9 +21,9 @@
                 <a href="{$url("/library")}">Library</a>
             </div>
             <div class="lang-box">
-                <span on:click="{() => lang.set('CHS')}" class:active="{$lang === 'CHS'}">CHS</span>
-                <span on:click="{() => lang.set('EN')}"  class:active="{$lang === 'EN'}">EN</span>
-                <span on:click="{() => lang.set('JP')}"  class:active="{$lang === 'JP'}">JP</span>
+                <span on:click="{() => lang.set('cn')}" class:active="{$lang === 'cn'}">CN</span>
+                <span on:click="{() => lang.set('en')}" class:active="{$lang === 'en'}">EN</span>
+                <span on:click="{() => lang.set('jp')}" class:active="{$lang === 'jp'}">JP</span>
             </div>
         </nav>
     </div>

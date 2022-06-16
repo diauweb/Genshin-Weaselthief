@@ -1,4 +1,4 @@
-[
+export default [
     {
         "match": "**",
         "filename": "ExcelBinOutput/QuestExcelConfigData.json",

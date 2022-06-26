@@ -3,7 +3,7 @@
     import { lang } from '../lang-store.js'
     
     let v
-    let dv = { version: '?' }
+    let dv = '?'
     fetch('/api/version').then(e => e.json().then(k => [v, dv] = [k.version, k.dataVersion]))
 </script>
 
@@ -12,7 +12,7 @@
         <div class="header-heading">
             <h1>Genshin-WeaselThief</h1>
             <fluent-badge>{v}</fluent-badge>
-            <fluent-badge>{dv.version}</fluent-badge>
+            <fluent-badge>{dv}</fluent-badge>
         </div>
         <nav>
             <div>

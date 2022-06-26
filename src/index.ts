@@ -11,7 +11,6 @@ import morgan from 'morgan'
 import { getAllDocuments, getDocument } from './document.js'
 import * as db from './db.js'
 
-await db.initDatabase();
 
 const app = express();
 const fallbackIndex = (await fse.readFile(path.resolve('./web/public/index.html'))).toString()
@@ -25,6 +24,8 @@ app.use(morgan('dev', { skip: (req) => req.path == '/get_text' }))
 if (git.gitAvailable()) {
     setVersion((await git.getVersioningCommit()).hash)
 }
+
+await db.initDatabase();
 
 const api = express.Router()
 api.get('/status', function (req, res) {
@@ -120,7 +121,7 @@ api.get('/version', async function (req, res) {
     return res.json({ 
         ok: true, 
         version: __version__,
-        dataVersion: await git.getDataVersion()
+        dataVersion: (await db.findOne('Version', { _id: db.currentOid() }))?.ver
     })
 })
 
@@ -128,21 +129,16 @@ api.get('/introspect', async function (req, res) {
     let __buildDate__ = 'dev'
     let __version__ = 'dev'
     let __branch__ = 'dev'
-    let data, commit
-    if (git.gitAvailable()) {
-        data = await git.getStatus()
-        commit = await git.getCommits()
-    }
+    let currentVersion = await db.findOne('Version', { _id: db.currentOid() });
+    let versions = await db.find('Version', {});
 
     res.json({
         ok: true,
         buildDate: __buildDate__,
         version: __version__,
-        dataVersion: await git.getDataVersion(),
         branch: __branch__,
-        vcs: git.gitAvailable(),
-        status: data,
-        commit
+        currentVersion,
+        versions
     })
 })
 

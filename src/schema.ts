@@ -8,9 +8,11 @@ export type Schema = {
     remap?: any;
 }[];
 
-export async function getSchemaObject (schema: Schema, version: string, sha: string) {
+export async function getSchemaObject (schema: Schema | ((args: any) => Schema), version: string, sha: string, args?: any) {
     let inherits = {}
-    for (const k of schema) {
+    const sch = typeof schema === 'function' ? schema({ version, sha, ...args }) : schema;
+
+    for (const k of sch) {
         if (k.match === '**') {
             inherits = k;
         } else if (satisfies(version, k.match) || sha === k.match) {

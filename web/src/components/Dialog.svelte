@@ -14,7 +14,7 @@
     }
 </script>
 
-<div class="card" class:player="{data?.TalkRole?.Type === 'TALK_ROLE_PLAYER'}">
+<div class="card" class:player="{data?.TalkRole__Type === 'TALK_ROLE_PLAYER'}">
     <details>
         <summary>
             <Translated id={data.TalkContentTextMapHash}/>
@@ -23,7 +23,7 @@
             <b>Id</b> <a href={"#"} on:click="{() => gotoAndRefresh(data.Id)}">{data.Id}</a>
         </p>
         <p>
-            <b>TalkRole</b> <Role role={data?.TalkRole}></Role>
+            <b>TalkRole</b> <Role role={{ Type: data.TalkRole__Type, Id: data.TalkRole__Id }}></Role>
         </p>
         <p>
             <b>Name</b> <Translated id={data.TalkRoleNameTextMapHash}/>

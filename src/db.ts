@@ -1,63 +1,64 @@
-import { Collection, Document, MongoClient, MongoServerError, ObjectId, WithId } from "mongodb";
-import { getAllVersions } from "./git.js";
-import ProgressBar from 'progress';
-import { getSchemaObject, Schema } from "./schema.js";
 import deepEqual from 'deep-equal';
-
-import TextMapCHS from './schema/TextMapCHS.json' assert { type: 'json' };
-import TextMapEN from './schema/TextMapEN.json' assert { type: 'json' };
-import TextMapJP from './schema/TextMapJP.json' assert { type: 'json' };
-import NPC from './schema/NPC.json' assert { type: 'json' };
-import Quest from './schema/Quest.json' assert { type: 'json' }
-import MainQuest from './schema/MainQuest.json' assert { type: 'json' }
+import { Collection, Document, Filter, MongoClient, MongoServerError, ObjectId, WithId } from "mongodb";
+import ProgressBar from 'progress';
+import { getAllVersions } from "./git.js";
+import { getSchemaObject, Schema } from "./schema.js";
 import { getVersion } from "./version.js";
+
+import TextMap from './schema/TextMap.js';
+import NPC from './schema/NPC.js';
+import Quest from './schema/Quest.js';
+import MainQuest from './schema/MainQuest.js';
+import Dialog from './schema/Dialog.js';
+import Talk from './schema/Talk.js';
 
 const uri = "mongodb://127.0.0.1:27017";
 
 const client = new MongoClient(uri, { keepAlive: true });
-const cachedVersionId: Record<string, string> = {};
+const cachedVersionId: Record<string, ObjectId> = {};
 let db = client.db("wt");
 
-export async function initDatabase () {
+export async function initDatabase() {
     const integrity = await checkIntegrity();
-    if (integrity === 'ok') return;
-    
-    console.log("[db] regenerating database");
-    if (integrity === 'textmap' || integrity === 'version') {
-        await db.dropDatabase();
-        db = client.db("wt");
-        await addVersionReference();
-        await addTextMaps();
-    }
+    if (integrity !== 'ok') {
+        console.log("[db] regenerating database");
+        if (integrity === 'textmap' || integrity === 'version') {
+            await db.dropDatabase();
+            db = client.db("wt");
+            await addVersionReference();
+            await addTextMaps();
+        }
 
-    if (integrity === 'schema') {
-        for (const cs of [["Schema"], ...collections]) {
-            try {
-                await db.collection(cs[0]).drop();
-            } catch (e) {
-                if ((e as MongoServerError).codeName !== 'NamespaceNotFound') {
-                    throw e;
+        if (integrity === 'schema') {
+            for (const cs of [["Schema"], ...collections]) {
+                try {
+                    await db.collection(cs[0]).drop();
+                } catch (e) {
+                    if ((e as MongoServerError).codeName !== 'NamespaceNotFound') {
+                        throw e;
+                    }
                 }
             }
         }
-    }
 
-    await addCollections();
+        await addCollections();
+    }
+    
+    db.collection("Version").find({}).forEach(e => { cachedVersionId[e.hash] = e._id });
 }
 
-async function addVersionReference () {
+async function addVersionReference() {
     const coll = await db.createCollection("Version");
     const docs = [];
     for (const v of await getAllVersions()) {
         const shortver = /\d+\.\d+\.\d+/.exec(v.message)?.slice(-1)?.[0] ?? '???';
-        const obj : any = {
+        const obj: any = {
             hash: v.hash,
             fullVersion: v.message,
             ver: shortver,
         };
         obj["objectId"] = (await coll.insertOne(obj)).insertedId;
         docs.push(obj);
-        cachedVersionId[v.hash] = obj["objectId"];
     }
     return docs;
 }
@@ -65,10 +66,12 @@ async function addVersionReference () {
 const collections: [string, Schema][] = [
     ["NPC", NPC],
     ["Quest", Quest],
-    ["MainQuest", MainQuest]
+    ["MainQuest", MainQuest],
+    ["Dialog", Dialog],
+    ["Talk", Talk]
 ];
 
-async function addCollections () {
+async function addCollections() {
     const schema = await db.createCollection("Schema");
     for (const cs of collections) {
         const coll = await db.createCollection(cs[0]);
@@ -87,12 +90,12 @@ async function addCollections () {
     }
 }
 
-async function addTextMaps () {
+async function addTextMaps() {
     const textColl = await db.createCollection("TextMap");
     await foreachVersion(async ver => {
-        const cnLang = await getSchemaObject(TextMapCHS, ver.ver, ver.hash);
-        const enLang = await getSchemaObject(TextMapEN, ver.ver, ver.hash);
-        const jpLang = await getSchemaObject(TextMapJP, ver.ver, ver.hash);
+        const cnLang = await getSchemaObject(TextMap, ver.ver, ver.hash, { lang: 'CHS'});
+        const enLang = await getSchemaObject(TextMap, ver.ver, ver.hash, { lang: 'EN' });
+        const jpLang = await getSchemaObject(TextMap, ver.ver, ver.hash, { lang: 'JP' });
         await insertMany(textColl, Object.keys(cnLang), v =>
             v.map(k => ({
                 _ver: ver._id,
@@ -101,7 +104,7 @@ async function addTextMaps () {
                 en: enLang[k],
                 jp: jpLang[k]
             })).filter(w => w.cn !== '' || w.en !== '' || w.jp !== '')
-        , `TextMap ${ver.ver}`);
+            , `TextMap ${ver.ver}`);
         console.log(`[db] created ${ver.ver} TextMap`);
     });
 }
@@ -128,26 +131,30 @@ async function insertMany(coll: Collection<Document>, src: any[], mapper: (v: ty
 }
 
 export function getVersionOid(sha: string) {
-    return new ObjectId(cachedVersionId[sha]); 
+    return cachedVersionId[sha];
 }
 
 export function currentOid() {
     return getVersionOid(getVersion()!);
 }
 
-export async function find (collection: string, query: any) {
-    return (await findIter(collection, query)).toArray();
+export async function find(collection: string, query: any) {
+    return findIter(collection, query).toArray();
 }
 
-export async function findIter (collection: string, query: any) {
-    return (await db.collection(collection)).find(query);
+export function findIter(collection: string, query: any) {
+    return db.collection(collection).find(query);
 }
 
-export async function findOne (collection: string, query: any) {
-    return (await db.collection(collection)).findOne(query);
+export async function findOne(collection: string, query: Filter<Document>) {
+    return db.collection(collection).findOne(query);
 }
 
-async function checkIntegrity () {
+export function collection (name: string) {
+    return db.collection(name);
+}
+
+async function checkIntegrity() {
     const hashes = (await getAllVersions()).map(ver => ver.hash);
     const cnt = await db.collection("Version").find({}).toArray();
     if (cnt.length !== hashes.length) {

@@ -19,7 +19,7 @@
 <fluent-accordion-item>
     <fluent-button on:click={() => click(data.hash)}>Checkout here</fluent-button>
     <span slot="heading">
-        {data.message}
+        {data.fullVersion}
     </span>
     <pre>{JSON.stringify(data, null, 2)}</pre>
 </fluent-accordion-item>

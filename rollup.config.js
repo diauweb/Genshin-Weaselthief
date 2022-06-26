@@ -24,10 +24,10 @@ export default async function () {
                 },
                 preventAssignment: true
             }),
+            json(),
             typescript(),
             nodeResolve(),
             commonjs(),
-            json(),
             command(`sh build.sh`)
         ]
     }

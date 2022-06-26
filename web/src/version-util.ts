@@ -9,6 +9,5 @@ export async function getCommits () {
     if (!data) {
         await getIntrospection()
     }
-    if (!data.vcs) return []
-    return data.commit.all
+    return data.versions
 }

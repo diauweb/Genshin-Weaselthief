@@ -5,11 +5,11 @@
 
     export let id
 
-    let text = { CHS: id, EN: id, JP: id }
+    let text = { cn: id, en: id, jp: id }
     let click = 0
     onMount(async function() {
         const w = await (await fetch(`/api/get_text?t=${id}`)).json()
-        text = w.text
+        text = w.text ?? { cn: '', en: '', jp: '' }
     })
 
     function clicked () {

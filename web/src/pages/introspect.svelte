@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import GitCommit from "../components/GitCommit.svelte";
+    import VersionData from "../components/VersionData.svelte";
     import { getIntrospection } from "../version-util.js";
 
     let data;
@@ -14,18 +14,14 @@
     <p>Version: {data.version}</p>
     <p>Build Date: {data.buildDate}</p>
     <p>Branch: {data.branch}</p>
-    <p>Data Version: {data.dataVersion.fullVersion}</p>
-    {#if data.vcs}
-        <p>Data:</p>
-        <pre>{JSON.stringify(data.status, null, 2)}</pre>
-        <fluent-accordion>
-            {#each data.commit.all as d}
-                <GitCommit data={d} />
-            {/each}
-        </fluent-accordion>
-    {:else}
-        <p><i>Data file is not in Version Control</i></p>
-    {/if}
+    <p>Data Version: {data.currentVersion.fullVersion}</p>
+
+    <p>Data:</p>
+    <fluent-accordion>
+        {#each data.versions as d}
+            <VersionData data={d} />
+        {/each}
+    </fluent-accordion>
 {:else}
     <i>Loading introspection</i>
 {/if}

@@ -17,11 +17,11 @@
         loading = true;
         fetch(`/api/search_dialogs?q=${encodeURIComponent(id)}`).then((v) =>
             v.json().then((e) => {
-                if (e.result.length <= 0) {
+                if (e.result === null) {
                     alert("No dialogs were found");
                     loading = false;
                 } else {
-                    $goto(`/dialog/${e.result[0].Id}`);
+                    $goto(`/dialog/${e.result.Id}`);
                 }
             })
         );
@@ -76,7 +76,7 @@
     <h2>History</h2>
     <fluent-select bind:this={selector}>
         {#each c as v}
-            <fluent-option value={v.hash}>{v.message}</fluent-option>
+            <fluent-option value={v.hash}>{v.ver}</fluent-option>
         {/each}
     </fluent-select>
     <fluent-button on:click={loadHistory} bind:this={loadButton}>Load</fluent-button>

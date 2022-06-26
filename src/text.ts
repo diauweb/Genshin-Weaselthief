@@ -8,11 +8,11 @@ export async function searchText (text: string, lang: string) {
 
     let plang;
     switch (lang) {
-        case 'EN':
+        case 'en':
             plang = 'en'; break
-        case 'JP':
-            plang = 'jp'; break 
-        case 'CHS':
+        case 'jp':
+            plang = 'jp'; break
+        case 'chs':
         default: 
             plang = 'cn';
     }
@@ -20,13 +20,14 @@ export async function searchText (text: string, lang: string) {
     const iter = await findIter('TextMap', {
         _ver: currentOid(),
         [plang]: {
-            $regex: text
+            $regex: text,
+            $options: 'i'
         }
     });
-    iter.limit(101);
+    iter.limit(100);
     let cnt = 0;
-    iter.forEach(e => { ret.push(e as unknown as Text); cnt++; });
-    return { result: ret, more: cnt >= 101 }
+    await iter.forEach(e => { ret.push(e as unknown as Text); cnt++; });
+    return { result: ret, more: cnt >= 100 }
 }
 
 export async function getText (text: string) {

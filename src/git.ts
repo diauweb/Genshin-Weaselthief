@@ -16,31 +16,12 @@ export function gitAvailable () {
     return gitOk
 }
 
-export async function getCommits () {
-    return git.log()
-}
-
-export async function getStatus () {
-    return git.status()
-}
-
 export async function getVersioningCommit () {
     return (await git.log({ file: 'TextMap/', maxCount: 1 })).all[0]
 }
 
 export async function getAllVersions () {
     return (await git.log({ file: 'TextMap/TextMapCHS.json' })).all;
-}
-
-export async function getDataVersion () {
-    if (!gitOk) return { fullVersion: 'live', version: 'live' }
-    const log = await git.log([getVersion()!])
-    const shortver = /\d+\.\d+\.\d+/.exec(log.latest?.message!)?.[0] ?? '???'
-
-    return {
-        fullVersion: log.latest?.message!,
-        version: shortver
-    }
 }
 
 export async function getFile (name: string, commit: string) : Promise<Buffer | null> {
@@ -53,6 +34,3 @@ export async function getFile (name: string, commit: string) : Promise<Buffer | 
     return resp
 }
 
-export function getHandle () {
-    return git
-}

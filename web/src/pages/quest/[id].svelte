@@ -45,7 +45,7 @@
             <tr><th>StepDesc</th><td><Translated id={q.StepDescTextMapHash}/></td></tr>
             <tr><th>GuideDesc</th><td><Translated id={q.GuideTipsTextMapHash}/></td></tr>
         </table>
-        {#if q.ExclusiveNpcList.length > 0}
+        {#if q.ExclusiveNpcList?.length > 0}
         <p>Exclusive Npcs:</p>
         <div style="margin: 5px; background: #fdfdfd;">
             {#each q.ExclusiveNpcList as npc}

@@ -2,19 +2,19 @@ export default [
     {
         match: "**",
         type: "remapColl",
-        filename: "ExcelBinOutput/DialogExcelConfigData.json"
+        filename: "ExcelBinOutput/TalkExcelConfigData.json"
     },
     {
         match: ">=2.7.0",
         remap: {
-            Id: 'id',
-            BeginWay: 'beginWay',
-            ActiveMode: 'activeMode',
-            InitDialog: 'initDialog',
-            NextRandomTalks: 'nextRandomTalks',
-            NpcId: "npcId",
-            QuestId: "questId",
-            LockGameTime: "lockGameTime",
+            Id: '_id',
+            BeginWay: '_beginWay',
+            ActiveMode: '_activeMode',
+            InitDialog: '_initDialog',
+            NextRandomTalks: '_nextRandomTalks',
+            NpcId: "_npcId",
+            QuestId: "_questId",
+            LockGameTime: "_lockGameTime",
         }
     },
     {

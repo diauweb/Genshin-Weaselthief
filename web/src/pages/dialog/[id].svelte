@@ -18,10 +18,10 @@
 
     async function gotoTalk () {
         const e = await (await fetch(`/api/search_talk?q=${id}`)).json()
-        if (e.result.length <= 0) {
+        if (!e.result) {
             alert('no parent talk found')
         } else {
-            $goto(`/talk/${e.result[0].Id}`)
+            $goto(`/talk/${e.result.Id}`)
         }
     }
 </script>

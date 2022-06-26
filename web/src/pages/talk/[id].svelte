@@ -31,7 +31,7 @@
 <p><b>BeginWay: </b>{talk.BeginWay}</p>
 <p><b>ActiveMode: </b>{talk.ActiveMode}</p>
 <p><b>InitDialog: </b>{talk.InitDialog}</p>
-<p><b>PerformCfg: </b>{talk.PerformCfg}</p>
+<p><b>NextRandomTalks: </b>{talk.NextRandomTalks}</p>
 {#if talk.QuestId}
 <p><b>QuestId: </b><a href="/quest/{talk.QuestId}">{talk.QuestId}</a></p>
 {/if}

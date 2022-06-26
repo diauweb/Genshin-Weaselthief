@@ -1,124 +1,114 @@
-import { getJSON } from "./util.js"
-
-const dialogTable = getJSON('ExcelBinOutput', 'DialogExcelConfigData.json')
-const talkTable = getJSON('ExcelBinOutput', 'TalkExcelConfigData.json')
-
-const reminderTable = getJSON('ExcelBinOutput', 'ReminderExcelConfigData.json')
+import {  currentOid, find, findOne } from "./db.js"
 
 export async function searchDialogContaining (mapId: string) {
     console.time(`search dialog ${mapId}`)
-    const rst = []
-    for (const o of await dialogTable()) {
-        for (const [k, v] of Object.entries(o)) {
-            if (k.endsWith("MapHash") && /* weak equal */ v == mapId) {
-                rst.push(o)
-                break
-            }
-        }
-    }
+    const nid = parseInt(mapId)
+    const rst = await findOne('Dialog', {
+      _ver: currentOid(),
+      $or: [
+        { TalkContentTextMapHash: nid },
+        { TalkTitleTextMapHash: nid },
+        { TalkRoleNameTextMapHash: nid }
+      ]
+    })
     console.timeEnd(`search dialog ${mapId}`)
     return rst
 }
 
-export async function getDialog (id: string | number) {
-    for (const o of await dialogTable()) {
-        if (o.Id == id) {
-            return o
-        }
-    }
+export async function getDialog (id: string) {
+    return findOne('Dialog', {
+        _ver: currentOid(),
+        Id: parseInt(id)
+    });
 }
 
 export async function getAllDialogs (id: string) {
-    console.time(`all_dialogs ${id}`)
-    const baseDialog = await getDialog(id)
+  console.time(`all_dialogs ${id}`)
+  type Dialog = { Id: number, NextDialogs: number[] }
+  const baseDialog = await getDialog(id) as unknown as Dialog
 
-    const dtb = await dialogTable()
-    // backward find initial dialog first
-    type Dialog = { Id: number, NextDialogs: number[] }
-    function prev (k : Dialog) : Dialog {
-        for (const o of dtb) {
-            if (o.NextDialogs.includes(k.Id)) {
-                return prev(o)
-            }
-        }
-        return k
-    }
-    const first = prev(baseDialog)
-    console.timeLog(`all_dialogs ${id}`, 'first', first.Id)
+  // backward find initial dialog first
+  async function prev (k : Dialog) : Promise<Dialog> {
+    const nextDoc = await findOne('Dialog', {
+        _ver: currentOid(),
+        NextDialogs: k.Id
+    }) as unknown as Dialog;
 
-    const dialogs = new Map<number, Dialog>()
-    dialogs.set(first.Id, first)
+    return nextDoc? prev(nextDoc) : k;
+  }
 
-    async function dfs (d: Dialog) {
-        for (const n of d.NextDialogs) {
-            if (dialogs.has(n)) continue
-            const cur = await getDialog(n)
-            dialogs.set(n, cur)
-            await dfs(cur)
-        }
-    }
-    await dfs(first)
+  const first = await prev(baseDialog)
+  console.timeLog(`all_dialogs ${id}`, 'first', first.Id)
 
-    console.timeEnd(`all_dialogs ${id}`)
-    return Array.from(dialogs.values())
+  const dialogs = new Map<number, Dialog>()
+  dialogs.set(first.Id, first)
+
+  async function dfs (d: Dialog) {
+      for (const n of d.NextDialogs) {
+          if (dialogs.has(n)) continue
+          const cur = await getDialog(`${n}`) as unknown as Dialog;
+          dialogs.set(n, cur);
+          await dfs(cur);
+      }
+  }
+  await dfs(first)
+
+  console.timeEnd(`all_dialogs ${id}`)
+  return Array.from(dialogs.values())
 }
 
 export async function searchTalkByDialog (id: string) {
-    const baseDialog = await getDialog(id)
-    const dtb = await dialogTable()
-    type Dialog = { Id: number, NextDialogs: number[] }
-    function prev (k : Dialog) : Dialog {
-        for (const o of dtb) {
-            if (o.NextDialogs.includes(k.Id)) {
-                return prev(o)
-            }
-        }
-        return k
-    }
-    const first = prev(baseDialog)
-    return searchTalkByInitDialog(first.Id)
+  type Dialog = { Id: number, NextDialogs: number[] }
+  const baseDialog = await getDialog(id) as unknown as Dialog
+
+  // backward find initial dialog first
+  async function prev (k : Dialog) : Promise<Dialog> {
+    const nextDoc = await findOne('Dialog', {
+        _ver: currentOid(),
+        NextDialogs: k.Id
+    }) as unknown as Dialog;
+
+    return nextDoc? prev(nextDoc) : k;
+  }
+
+  const first = await prev(baseDialog)
+  return searchTalkByInitDialog(first.Id)
 }
 
-export async function searchTalkByInitDialog (id: string | number) {
-    console.time(`search talk by init dialog ${id}`)
-    const rst = []
-    for (const o of await talkTable()) {
-        if (o.InitDialog == id) { 
-            rst.push(o)
-            // quite not possible to find more
-            break
-        }
-    }
-    console.timeEnd(`search talk by init dialog ${id}`)
-    return { result: rst }
+async function searchTalkByInitDialog (id: number) {
+  console.time(`search talk by init dialog ${id}`)
+  const rst = await findOne('Talk', {
+    _ver: currentOid(),
+    InitDialog: id
+  })
+  console.timeEnd(`search talk by init dialog ${id}`)
+  return { result: rst }
 }
 
 export async function getTalk (id: string) {
-    for (const o of await talkTable()) {
-        if (o.Id == id) { 
-            return { result: o }
-        }
+    return {
+        result: await findOne('Talk', {
+            _ver: currentOid(),
+            Id: parseInt(id)
+        })
     }
 }
 
 export async function getReminder (id: string) {
-    const table = await reminderTable()
-    for (const k of table) {
-        if (k.Id == id) {
-            return { result: k }
-        }
-    }
-
-    return { result: null }
+    const result = await findOne('Reminder', {
+        _ver: currentOid(),
+        Id: parseInt(id)
+    });
+    return { result }
 }
 
 export async function searchReminder (id: string) {
-    const table = await reminderTable()
-    for (const k of table) {
-        if (k.SpeakerTextMapHash == id || k.ContentTextMapHash == id) {
-            return { result: k.Id }
-        }
-    }
-    
-    return { result: null }
+    const result = await findOne('Reminder', {
+        _ver: currentOid(),
+        $or: [
+            { SpeakerTextMapHash: parseInt(id) },
+            { ContentTextMapHash: parseInt(id) },
+        ]
+    })
+    return { result }
 }

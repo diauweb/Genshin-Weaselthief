@@ -5,10 +5,9 @@ import { getAllDialogs, getDialog, getReminder, getTalk, searchDialogContaining,
 import * as git from './git.js'
 import { getQuests } from './quest.js'
 import { getNpc } from './role.js'
-import { getHistoryText, getText, searchText } from './text.js'
+import { getAllText, getText, searchText } from './text.js'
 import { getVersion, setVersion } from './version.js'
 import morgan from 'morgan'
-import { getAllDocuments, getDocument } from './document.js'
 import * as db from './db.js'
 
 
@@ -84,19 +83,13 @@ api.get('/search_dialogs', async function(req, res) {
 query('/search_talk', q => searchTalkByDialog(q))
 query('/get_talk', q => getTalk(q))
 query('/get_quests', q => getQuests(q))
-query('/get_document', q => getDocument(q))
 query('/search_reminders', q => searchReminder(q))
 query('/get_reminder', q => getReminder(q))
+query('/find_text', q => getAllText(q))
 
 api.get('/get_text', async function(req, res) {
     ensureArg(req, res, 't', async v => {
         res.json({ ok: true, text: await getText(v) })
-    })
-})
-
-api.get('/get_history_text', async function(req, res) {
-    ensureArg(req, res, 'q', async v => {
-        res.json({ ok: true, text: await getHistoryText(v, req.query['h'] as string) })
     })
 })
 
@@ -110,10 +103,6 @@ api.get('/dialog_set', async function(req, res) {
     ensureArg(req, res, 't', async v => {
         res.json({ ok: true, dialogs: await getAllDialogs(v) })
     })
-})
-
-api.get('/documents', async function(req, res) {
-    res.json({ ok: true, ...await getAllDocuments()})
 })
 
 api.get('/version', async function (req, res) {
@@ -153,5 +142,5 @@ app.use('*', function (req, res) {
 })
 
 app.listen(8081, () => {
-    console.log(`app serving at http://localhost:${8081}`)
+    console.log(`app serving at http://0.0.0.0:${8081}`)
 })

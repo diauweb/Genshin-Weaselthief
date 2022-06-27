@@ -1,5 +1,4 @@
 import simpleGit from 'simple-git'
-import { getVersion } from './version.js'
 
 let git : ReturnType<typeof simpleGit>
 let gitOk = false

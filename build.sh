@@ -7,5 +7,4 @@ cd ..
 
 mkdir -p out/web/public
 cp -r web/public/ out/web/
-cp start.bat out/
 echo '{ "type": "module" }' > out/package.json

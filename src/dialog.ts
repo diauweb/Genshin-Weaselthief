@@ -1,4 +1,4 @@
-import {  currentOid, find, findOne } from "./db.js"
+import {  currentOid, findOne } from "./db.js"
 
 export async function searchDialogContaining (mapId: string) {
     console.time(`search dialog ${mapId}`)

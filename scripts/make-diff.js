@@ -1,7 +1,7 @@
 import ExcelJS from 'exceljs'
 import ProgressBar from 'progress'
 import fs from 'fs'
-import deepEqual from 'deep-equal'
+import deepEqual from 'fast-deep-equal'
 
 // Please build main project before use
 import { getHandle } from '../dist/git.js'

@@ -1,4 +1,4 @@
-import deepEqual from 'deep-equal';
+import deepEqual from 'fast-deep-equal';
 import { Collection, Document, Filter, MongoClient, MongoServerError, ObjectId, WithId } from "mongodb";
 import ProgressBar from 'progress';
 import { getAllVersions } from "./git.js";
@@ -18,11 +18,13 @@ const client = new MongoClient(uri, { keepAlive: true });
 const cachedVersionId: Record<string, ObjectId> = {};
 let db = client.db("wt");
 
+const dataVersion = 2;
 export async function initDatabase() {
     const integrity = await checkIntegrity();
     if (integrity !== 'ok') {
         console.log("[db] regenerating database");
-        if (integrity === 'textmap' || integrity === 'version') {
+        console.time("regenerate");
+        if (integrity === 'version') {
             await db.dropDatabase();
             db = client.db("wt");
             await addVersionReference();
@@ -42,6 +44,8 @@ export async function initDatabase() {
         }
 
         await addCollections();
+        await db.collection("Schema").insertOne({ name: '_wtDataVer', v: dataVersion });
+        console.timeEnd("regenerate");
     }
     
     db.collection("Version").find({}).forEach(e => { cachedVersionId[e.hash] = e._id });
@@ -75,10 +79,37 @@ async function addCollections() {
     const schema = await db.createCollection("Schema");
     for (const cs of collections) {
         const coll = await db.createCollection(cs[0]);
+
+        let currentObject: Record<string, any> = {};
+        let first = true;
         await foreachVersion(async ver => {
             try {
                 const obj = await getSchemaObject(cs[1], ver.ver, ver.hash);
-                await insertMany(coll, obj, e => (e.map(v => ({ _ver: ver._id, ...v }))), `${cs[0]} ${ver.ver}`);
+                if (first) {
+                    console.log(`[db] add reference ${cs[0]} ${ver.ver}`);
+                    await insertMany(coll, obj, e => (e.map(v => ({ _ver: ver._id, ...v }))), `${cs[0]} ${ver.ver}`);
+                    obj.forEach((v: { Id: string | number; }) => { currentObject[v.Id] = v });
+                    first = false;
+                    return;
+                }
+
+                const progress = new ProgressBar(`${cs[0]} ${ver.ver} [:bar] :current/:total d=:dirty`, { total: obj.length });
+                let dirty = 0;
+                for(const v of obj) {
+                    const id = v.Id;
+                    if (!deepEqual(currentObject[id], v)) {
+                        currentObject[id] = v;
+                        await coll.insertOne({
+                            _ver: ver._id,
+                            ...v
+                        });
+                        dirty++;
+                    }
+                    progress.tick({ dirty });
+                }
+
+
+                progress.terminate();
             } catch (e) {
                 console.log("[db] addCollection:", "failed to generate", cs[0], "for", ver);
                 throw e;
@@ -92,19 +123,57 @@ async function addCollections() {
 
 async function addTextMaps() {
     const textColl = await db.createCollection("TextMap");
+    let [currentCn, currentEn, currentJp]: Record<string, string>[] = [{}, {}, {}];
+
+    let first = true;
     await foreachVersion(async ver => {
         const cnLang = await getSchemaObject(TextMap, ver.ver, ver.hash, { lang: 'CHS'});
         const enLang = await getSchemaObject(TextMap, ver.ver, ver.hash, { lang: 'EN' });
         const jpLang = await getSchemaObject(TextMap, ver.ver, ver.hash, { lang: 'JP' });
-        await insertMany(textColl, Object.keys(cnLang), v =>
+
+        if (first) {
+            console.log(`[db] add reference TextMap ${ver.ver}`);
+            await insertMany(textColl, Object.keys(cnLang), v =>
             v.map(k => ({
                 _ver: ver._id,
                 hash: parseInt(k),
                 cn: cnLang[k],
                 en: enLang[k],
                 jp: jpLang[k]
-            })).filter(w => w.cn !== '' || w.en !== '' || w.jp !== '')
-            , `TextMap ${ver.ver}`);
+            })).filter(w => w.cn !== '' || w.en !== '' || w.jp !== ''), `TextMap ${ver.ver}`);
+
+            [currentCn, currentEn, currentJp] = [cnLang, enLang, jpLang];
+            first = false;
+            return;
+        }
+
+
+        const progress = new ProgressBar(`TextMap ${ver.ver} [:bar] :current/:total d=:dirty`, { total: Object.keys(cnLang).length });
+        let dirty = 0;
+        for (const k of Object.keys(cnLang)) {
+            const object = {
+                _ver: ver._id,
+                hash: parseInt(k),
+                cn: cnLang[k],
+                en: enLang[k],
+                jp: jpLang[k],
+            };
+
+            const isDirty = 
+                currentCn[k] === undefined || 
+                currentCn[k] !== cnLang[k] ||
+                currentEn[k] !== enLang[k] ||
+                currentJp[k] !== jpLang[k];
+            
+            if (isDirty) {
+                [currentCn[k], currentEn[k], currentJp[k]] = [cnLang[k], enLang[k], jpLang[k]];
+                await textColl.insertOne(object);
+                dirty++;
+            }
+            progress.tick({ dirty });
+        }
+
+        progress.terminate();
         console.log(`[db] created ${ver.ver} TextMap`);
     });
 }
@@ -120,7 +189,7 @@ async function foreachVersion(cb: (doc: Document) => void) {
 
 async function insertMany(coll: Collection<Document>, src: any[], mapper: (v: typeof src) => any[], progressName: string) {
     let len = src.length;
-    let sz = 100000;
+    let sz = 10000;
     const progress = new ProgressBar(`${progressName} [:bar] :current/:total`, { total: len });
     for (let i = 0; i < Math.ceil(len / sz); i++) {
         let partData = mapper(src.slice(i * sz, (i + 1) * sz));
@@ -162,15 +231,12 @@ async function checkIntegrity() {
         return "version";
     }
 
-    const textVers = await db.collection("TextMap").aggregate([{
-        $group: { _id: "$_ver" }
-    }]).map(e => e._id).toArray();
-    if (textVers.length !== hashes.length) {
-        console.log("[db] integrity: textmap size mismatch");
-        return "textmap";
+    const schemaColl = db.collection("Schema");
+    if ((await schemaColl.findOne({ name: "_wtDataVer" }))?.v !== dataVersion) {
+        console.log("[db] data version mismatch");
+        return "version";
     }
 
-    const schemaColl = db.collection("Schema");
     for (const [name, schema] of collections) {
         const col = await schemaColl.findOne({ name });
         if (col === null) {

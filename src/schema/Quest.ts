@@ -7,6 +7,8 @@ export default [
     {
         "match": ">=2.7.0",
         "remap": {
+            // add master key to dedupe
+            "Id": "subId",
             "SubId": "subId",
             "MainId": "mainId",
             "Order": "order",
@@ -20,6 +22,7 @@ export default [
     {
         "match": "*",
         "remap": {
+            "Id": "SubId",
             "SubId": "SubId",
             "MainId": "MainId",
             "Order": "Order",

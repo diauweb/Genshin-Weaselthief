@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { goto } from "@roxi/routify";
-    import { getCommits } from "../../version-util.js";
     import TextRenderer from '../../components/TextRenderer.svelte'
+    import { findByOid } from "../../version-util";
 
     export let id;
     let text = { cn: "", en: "", jp: "" };
@@ -42,14 +42,13 @@
         );
     }
 
-    let htext = { cn: "", en: "", jp: "" };
-    let selector;
+    let hTexts = [];
     let loadButton;
     function loadHistory() {
         loadButton.disabled = true
-        fetch(`/api/get_history_text?q=${id}&h=${selector.value}`).then(r => r.json()
+        fetch(`/api/find_text?q=${id}`).then(r => r.json()
             .then(o => {
-                htext = o.text
+                hTexts = [...o.result]
                 loadButton.disabled = false
             })
         )
@@ -72,15 +71,17 @@
     <li>Search {id} in ...</li>
 </ul>
 
-{#await getCommits() then c}
-    <h2>History</h2>
-    <fluent-select bind:this={selector}>
-        {#each c as v}
-            <fluent-option value={v.hash}>{v.ver}</fluent-option>
+<h2>History</h2>
+<fluent-button on:click={loadHistory} bind:this={loadButton}>Load History</fluent-button>
+<div style="margin: 1em 0">
+    <fluent-accordion>
+        {#each hTexts as t}
+            <fluent-accordion-item>
+                <span slot="heading">{#await findByOid(t._ver) then v}{v.ver}{/await}</span>
+                <p><TextRenderer text={t.cn} /></p>
+                <p><TextRenderer text={t.en}/></p>
+                <p><TextRenderer text={t.jp}/></p>
+            </fluent-accordion-item>
         {/each}
-    </fluent-select>
-    <fluent-button on:click={loadHistory} bind:this={loadButton}>Load</fluent-button>
-    <p>{htext.cn}</p>
-    <p>{htext.en}</p>
-    <p>{htext.jp}</p>
-{/await}
+    </fluent-accordion>
+</div>

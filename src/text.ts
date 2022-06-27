@@ -1,4 +1,4 @@
-import { currentOid, findIter, findOne, getVersionOid } from './db.js'
+import { currentOid, find, findIter, findOne, getVersionOid } from './db.js'
 
 export async function searchText (text: string, lang: string) {
     type Text = {
@@ -37,14 +37,10 @@ export async function getText (text: string) {
     })
 }
 
-export async function getHistoryText (text: string, hs: string) {
-    try {
-        return findOne ('TextMap', {
-            _ver: getVersionOid(hs),
-            hash: parseInt(text)
-        })
-    } catch (e) {
-        console.log(e)
-        return { cn: 'Error while getting text', en: '', jp: ''}
-    }
+export async function getAllText (text: string) {
+    const result = await find('TextMap', {
+        hash: parseInt(text),
+    });
+
+    return { result };
 }

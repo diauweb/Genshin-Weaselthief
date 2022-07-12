@@ -1,4 +1,4 @@
-import { currentOid, find, findIter, findOne, getVersionOid } from './db.js'
+import { currentOid, find, findIter, findOne } from './db.js'
 
 export async function searchText (text: string, lang: string) {
     type Text = {

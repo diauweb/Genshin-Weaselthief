@@ -2,10 +2,7 @@ import ExcelJS from 'exceljs'
 import ProgressBar from 'progress'
 import fs from 'fs'
 import deepEqual from 'fast-deep-equal'
-
-// Please build main project before use
-import { getHandle } from '../dist/git.js'
-import { getContent } from '../dist/util.js'
+import simpleGit from 'simple-git'
 
 // if (process.argv.length < 4) {
 //     console.log(`Usage: make-diff.js <fromSHA> <toSHA>`)
@@ -14,9 +11,20 @@ import { getContent } from '../dist/util.js'
 
 // const [v1, v2] = [process.argv[2], process.args[3]]
 
-const [v1, v2] = ["ab38c0a0ba6379e84c3ab31752366ce309519b42", "ebb117f78dab56e704853b71fa60f45ee2cefe79"]
+const [v1, v2] = ["ebb117f78dab56e704853b71fa60f45ee2cefe79", "d56ed231c4513963d27051dd6f7828f0e06c2588"]
 
-const git = getHandle()
+const git = simpleGit('./GenshinData')
+
+async function getContent (name, commit) {
+    const k = await git.raw('ls-tree', commit, name);
+    const v = k.replace('\t', ' ').split(' ')[2];
+    if (v?.length !== 40) {
+        return null;
+    }
+    const resp = await git.binaryCatFile(['blob', v]);
+    return resp;
+}
+
 const workbook = new ExcelJS.Workbook();
 const mainSheet = workbook.addWorksheet('Summary')
 
@@ -125,6 +133,12 @@ async function addDiff(tableName, dispName, masterKey, compares) {
                     break
                 }
                 if (ck.endsWith("textmaphash")) {
+
+                    // skip strip differences
+                    if (v1l[v[ck]] === '' && v2l[s[ck]] === undefined) {
+                        continue
+                    }
+
                     if (v2l[s[ck]] !== v1l[v[ck]]) {
                         dirty = true
                         break

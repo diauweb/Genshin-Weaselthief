@@ -166,7 +166,10 @@ async function addTextMaps() {
             };
 
             // exclude empty strings
-            if (cnLang[k] === '') continue;
+            if (cnLang[k] === '') {
+                progress.total--;
+                continue;
+            }
 
             const isDirty = 
                 currentCn[k] === undefined || 

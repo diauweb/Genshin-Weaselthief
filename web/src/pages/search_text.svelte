@@ -26,8 +26,8 @@
     }
 
     function search() {
-        $goto("/search_text", { keyword: input.value });
         update();
+        $goto("/search_text", { keyword: input.value });
     }
 
     const unsub = lang.subscribe(() => update());

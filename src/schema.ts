@@ -1,5 +1,5 @@
 import satisfies from 'semver/functions/satisfies.js';
-import { getContent } from './util.js';
+import { getFile } from './git.js';
 
 export type Schema = {
     match: string;
@@ -17,10 +17,11 @@ export async function getSchemaObject (schema: Schema | ((args: any) => Schema),
             inherits = k;
         } else if (satisfies(version, k.match) || sha === k.match) {
             const conf = {...inherits, ...k};
-            const content = await getContent(conf.filename!, sha)
-            if (!content) {
+            const data = await getFile(conf.filename!, sha);
+            if (!data) {
                 throw `${conf.filename} @ ${sha} do not exists`;
             }
+            const content = data.toString();
             const srcFile = JSON.parse(content);
             switch (conf.type) {
                 case 'all': return srcFile;

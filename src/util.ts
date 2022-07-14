@@ -1,34 +1,25 @@
-import LRUCache from 'lru-cache'
-import { getFile } from './git.js'
+import { find } from './db.js'
 
-
-let jsons = new Map<string, Promise<any>>()
-let hfiles = new LRUCache<string, Promise<string | undefined>>({ 
-    max: 3
-})
-
-export function reset () {
-    jsons.clear()
-}
-
-export function getContent (p: string, sha: string) : Promise<string | undefined> {
-    if (!sha) {
-        throw 'sha'
+export async function inlineLanguage(resultItem: any) {
+    const translate: Record<string, string> = {};
+    for (const k of Object.keys(resultItem)) {
+      if (!k.endsWith("TextMapHash")) continue;
+      translate[resultItem[k]] = k;
     }
-
-    const fkey = `${p}@${sha}`
-    const f = hfiles.get(fkey)
-    if (f) {
-        return f
-    }
-
-    async function getter (p: string, sha: string) {
-        const f = await getFile(p, sha);
-        if (f) return f.toString();
-        else return undefined;
-    }
-
-    const g = getter(p, sha)
-    hfiles.set(fkey, g)
-    return g
-}
+  
+    const q = (await find("TextMap", {
+      _ver: resultItem._ver,
+      hash: { $in: Object.keys(translate).map(i => parseInt(i)) }
+    }))
+    
+    q.forEach(e => resultItem[translate[e.hash]] = e)
+    Object.values(translate).forEach(e => {
+      if (typeof resultItem[e] !== 'object') {
+        const hs = resultItem[e]
+        resultItem[e] = { hash: hs, cn: hs, en: hs, jp: hs }
+      }
+    })
+  
+    return resultItem;
+  }
+  

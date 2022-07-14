@@ -37,6 +37,6 @@
 
 <style>
     .text-colored {
-        text-shadow: 0 1px 0 rgba(0, 0, 0, .5);
+        text-shadow: 0 .8px 0 rgba(0, 0, 0, .5);
     }
 </style>

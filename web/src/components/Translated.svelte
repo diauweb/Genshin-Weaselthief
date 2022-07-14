@@ -6,21 +6,23 @@
     export let id
 
     let text = { cn: id, en: id, jp: id }
-    let click = 0
+    
     onMount(async function() {
-        const w = await (await fetch(`/api/get_text?t=${id}`)).json()
-        text = w.text ?? { cn: '', en: '', jp: '' }
+        if (typeof id === 'object') {
+            text = id
+            id = text.hash
+        } else {
+            const w = await (await fetch(`/api/get_text?t=${id}`)).json()
+            text = w.text ?? { cn: '', en: '', jp: '' }
+        }
     })
 
     function clicked () {
-        if (new Date() - click < 400) { 
-            window.open(`/text/${id}`, '_blank')
-        }
-        click = new Date()
+        window.open(`/text/${id}`, '_blank')
     }
 </script>
 
-<span title="{id}" class="translated" on:click={clicked}>
+<span title="{id}" class="translated" on:dblclick={clicked}>
     <TextRenderer text={text[$lang] ?? id}/>
 </span>
 

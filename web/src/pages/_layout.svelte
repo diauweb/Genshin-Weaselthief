@@ -32,6 +32,9 @@
     <slot></slot>
 </main>
 
+<footer>
+    
+</footer>
 <style>
 
 header {
@@ -86,6 +89,12 @@ main {
     margin: 5px;
     cursor: pointer;
     color: rgb(75, 75, 125);
+}
+
+footer {
+    padding: 50px 20px;
+    /* background-color: gray; */
+    display: block;
 }
 
 </style>

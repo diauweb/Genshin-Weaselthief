@@ -18,7 +18,7 @@ const client = new MongoClient(uri, { keepAlive: true });
 const cachedVersionId: Record<string, ObjectId> = {};
 let db = client.db("wt");
 
-const dataVersion = 2;
+const dataVersion = 3;
 export async function initDatabase() {
     const integrity = await checkIntegrity();
     if (integrity !== 'ok') {
@@ -67,12 +67,12 @@ async function addVersionReference() {
     return docs;
 }
 
-const collections: [string, Schema][] = [
-    ["NPC", NPC],
+const collections: [string, Schema, any?][] = [
+    ["NPC", NPC, { Id: 1 }],
     ["Quest", Quest],
     ["MainQuest", MainQuest],
-    ["Dialog", Dialog],
-    ["Talk", Talk]
+    ["Dialog", Dialog, { Id: 1 }],
+    ["Talk", Talk, { Id: 1 }]
 ];
 
 async function addCollections() {
@@ -115,9 +115,16 @@ async function addCollections() {
                 throw e;
             }
         })
-        schema.insertOne({
-            name: cs[0], schema: cs[1]
+
+        if (cs[2]) {
+            let id = Array.isArray(cs[2])? cs[2] : [cs[2]];
+            await coll.createIndexes(id.map(i => ({ key: i })));
+        }
+
+        await schema.insertOne({
+            name: cs[0], schema: cs[1], index: cs[2]
         });
+
     }
 }
 
@@ -147,7 +154,6 @@ async function addTextMaps() {
             return;
         }
 
-
         const progress = new ProgressBar(`TextMap ${ver.ver} [:bar] :current/:total d=:dirty`, { total: Object.keys(cnLang).length });
         let dirty = 0;
         for (const k of Object.keys(cnLang)) {
@@ -158,6 +164,9 @@ async function addTextMaps() {
                 en: enLang[k],
                 jp: jpLang[k],
             };
+
+            // exclude empty strings
+            if (cnLang[k] === '') continue;
 
             const isDirty = 
                 currentCn[k] === undefined || 
@@ -176,6 +185,9 @@ async function addTextMaps() {
         progress.terminate();
         console.log(`[db] created ${ver.ver} TextMap`);
     });
+
+    console.log("[db] create index for TextMap")
+    await textColl.createIndex({ hash: 1 })
 }
 
 async function foreachVersion(cb: (doc: Document) => void) {
@@ -237,13 +249,13 @@ async function checkIntegrity() {
         return "version";
     }
 
-    for (const [name, schema] of collections) {
+    for (const [name, schema, index] of collections) {
         const col = await schemaColl.findOne({ name });
         if (col === null) {
             console.log("[db] integrity: missing schema", name);
             return "schema";
         }
-        if (!deepEqual(col["schema"], schema)) {
+        if (!deepEqual(col["schema"], schema) && !deepEqual(col["index"], index)) {
             console.log("[db] integrity: schema", name, "is outdated");
             return "schema";
         }

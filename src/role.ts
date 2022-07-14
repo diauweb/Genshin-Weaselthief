@@ -1,4 +1,5 @@
 import { currentOid, findOne } from "./db.js";
+import { inlineLanguage } from "./util.js";
 
 export async function getNpc (v : string) {
     const result = await findOne("NPC", {
@@ -6,5 +7,5 @@ export async function getNpc (v : string) {
         Id: parseInt(v)
     });
     
-    return { result };
+    return { result: inlineLanguage(result) };
 }

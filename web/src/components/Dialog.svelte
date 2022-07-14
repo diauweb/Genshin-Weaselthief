@@ -47,9 +47,13 @@
     .card {
         background-color: #eee;
         margin: 5px;
-        padding: 5px;
+        padding: 8px 10px;
+        border-radius: 5px;
     }
 
+    .card summary {
+        cursor: pointer;
+    }
     .player {
         background-color: rgb(230, 235, 210) !important;
     }

@@ -24,7 +24,7 @@ export async function searchText (text: string, lang: string) {
             $options: 'i'
         }
     });
-    iter.limit(100);
+    iter.limit(1000);
     let cnt = 0;
     await iter.forEach(e => { ret.push(e as unknown as Text); cnt++; });
     return { result: ret, more: cnt >= 100 }

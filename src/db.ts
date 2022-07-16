@@ -11,11 +11,12 @@ import Quest from './schema/Quest.js';
 import MainQuest from './schema/MainQuest.js';
 import Dialog from './schema/Dialog.js';
 import Talk from './schema/Talk.js';
+import Reminder from './schema/Reminder.js';
 
 const uri = "mongodb://127.0.0.1:27017";
 
 const client = new MongoClient(uri, { keepAlive: true });
-const cachedVersionId: Record<string, ObjectId> = {};
+const cachedVersionId : Record<string, number> = {};
 let db = client.db("wt");
 
 const dataVersion = 3;
@@ -47,8 +48,8 @@ export async function initDatabase() {
         await db.collection("Schema").insertOne({ name: '_wtDataVer', v: dataVersion });
         console.timeEnd("regenerate");
     }
-    
-    db.collection("Version").find({}).forEach(e => { cachedVersionId[e.hash] = e._id });
+
+    db.collection("Version").find({}).forEach(e => { cachedVersionId[e.hash] = e.vid });
 }
 
 async function addVersionReference() {
@@ -60,6 +61,7 @@ async function addVersionReference() {
             hash: v.hash,
             fullVersion: v.message,
             ver: shortver,
+            vid: shortver.split('.').map((e, i) => parseInt(e) * 100 ** (2 - i)).reduce((p, c) => p + c, 0)
         };
         obj["objectId"] = (await coll.insertOne(obj)).insertedId;
         docs.push(obj);
@@ -71,8 +73,9 @@ const collections: [string, Schema, any?][] = [
     ["NPC", NPC, { Id: 1 }],
     ["Quest", Quest],
     ["MainQuest", MainQuest],
-    ["Dialog", Dialog, { Id: 1 }],
-    ["Talk", Talk, { Id: 1 }]
+    ["Dialog", Dialog, [{ Id: 1 }, { TalkRole__Id: 1}]],
+    ["Talk", Talk, { Id: 1 }],
+    ["Reminder", Reminder, { Id: 1 }]
 ];
 
 async function addCollections() {
@@ -87,7 +90,7 @@ async function addCollections() {
                 const obj = await getSchemaObject(cs[1], ver.ver, ver.hash);
                 if (first) {
                     console.log(`[db] add reference ${cs[0]} ${ver.ver}`);
-                    await insertMany(coll, obj, e => (e.map(v => ({ _ver: ver._id, ...v }))), `${cs[0]} ${ver.ver}`);
+                    await insertMany(coll, obj, e => (e.map(v => ({ _ver: ver.vid, ...v }))), `${cs[0]} ${ver.ver}`);
                     obj.forEach((v: { Id: string | number; }) => { currentObject[v.Id] = v });
                     first = false;
                     return;
@@ -100,7 +103,7 @@ async function addCollections() {
                     if (!deepEqual(currentObject[id], v)) {
                         currentObject[id] = v;
                         await coll.insertOne({
-                            _ver: ver._id,
+                            _ver: ver.vid,
                             ...v
                         });
                         dirty++;
@@ -142,7 +145,7 @@ async function addTextMaps() {
             console.log(`[db] add reference TextMap ${ver.ver}`);
             await insertMany(textColl, Object.keys(cnLang), v =>
             v.map(k => ({
-                _ver: ver._id,
+                _ver: ver.vid,
                 hash: parseInt(k),
                 cn: cnLang[k],
                 en: enLang[k],
@@ -258,7 +261,7 @@ async function checkIntegrity() {
             console.log("[db] integrity: missing schema", name);
             return "schema";
         }
-        if (!deepEqual(col["schema"], schema) && !deepEqual(col["index"], index)) {
+        if (!deepEqual(col["schema"], schema) || !deepEqual(col["index"], index ?? null)) {
             console.log("[db] integrity: schema", name, "is outdated");
             return "schema";
         }

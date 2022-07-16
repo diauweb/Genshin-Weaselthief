@@ -18,8 +18,6 @@
     <tr><th>Speaker</th><td><Translated id={data.SpeakerTextMapHash}/></td></tr>
     <tr><th>Content</th><td><Translated id={data.ContentTextMapHash}/></td></tr>
     <tr><th>ShowTime</th><td>{data.ShowTime}</td></tr>
-    <tr><th>HasMove</th><td>{data.HasMove}</td></tr>
-    <tr><th>Style</th><td>{data.Style}</td></tr>
     {#if data.NextReminderId}
     <tr>
         <th>NextReminder</th>

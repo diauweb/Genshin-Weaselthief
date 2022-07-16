@@ -4,7 +4,7 @@ import path from 'path'
 import { getAllDialogs, getDialog, getReminder, getTalk, searchDialogContaining, searchReminder, searchTalkByDialog } from './dialog.js'
 import * as git from './git.js'
 import { getQuests } from './quest.js'
-import { getNpc } from './role.js'
+import { getAllNpcs, getDetailNpc, getNpc } from './role.js'
 import { getAllText, getText, searchText } from './text.js'
 import { getVersion, setVersion } from './version.js'
 import morgan from 'morgan'
@@ -86,6 +86,9 @@ query('/get_quests', q => getQuests(q))
 query('/search_reminders', q => searchReminder(q))
 query('/get_reminder', q => getReminder(q))
 query('/find_text', q => getAllText(q))
+query('/npc_details', q => getDetailNpc(q))
+
+api.get('/npcs', async (req, res) => res.json(await getAllNpcs()));
 
 api.get('/get_text', async function(req, res) {
     ensureArg(req, res, 't', async v => {

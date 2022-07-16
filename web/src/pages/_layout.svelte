@@ -18,6 +18,7 @@
             <div>
                 <a href="{$url("/")}">Home</a> 
                 <a href="{$url("/introspect")}">Introspect</a>
+                <a href="{$url("/inventory")}">Inventory</a>
             </div>
             <div class="lang-box">
                 <span on:click="{() => lang.set('cn')}" class:active="{$lang === 'cn'}">CN</span>

@@ -111,5 +111,5 @@ export async function searchReminder(id: string) {
       { ContentTextMapHash: parseInt(id) },
     ]
   })
-  return { result }
+  return { result: result?.Id }
 }

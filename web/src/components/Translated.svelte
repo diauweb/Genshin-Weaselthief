@@ -12,7 +12,10 @@
             text = id
             id = text.hash
         } else {
-            const w = await (await fetch(`/api/get_text?t=${id}`)).json()
+            let w = {}
+            if (id !== undefined) {
+                w = await (await fetch(`/api/get_text?t=${id}`)).json()
+            }
             text = w.text ?? { cn: '', en: '', jp: '' }
         }
     })

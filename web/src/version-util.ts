@@ -10,7 +10,7 @@ export async function getCommits () {
     if (!data) {
         await getIntrospection()
         verTable = {}
-        data.versions.forEach(e => verTable[e._id] = e);
+        data.versions.forEach(e => verTable[e.vid] = e);
     }
     return data.versions
 }

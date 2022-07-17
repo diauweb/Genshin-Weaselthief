@@ -113,7 +113,7 @@ api.get('/version', async function (req, res) {
     return res.json({ 
         ok: true, 
         version: __version__,
-        dataVersion: (await db.findOne('Version', { _id: db.currentOid() }))?.ver
+        dataVersion: (await db.findOne('Version', { vid: db.currentOid() }))?.ver
     })
 })
 
@@ -121,7 +121,7 @@ api.get('/introspect', async function (req, res) {
     let __buildDate__ = 'dev'
     let __version__ = 'dev'
     let __branch__ = 'dev'
-    let currentVersion = await db.findOne('Version', { _id: db.currentOid() });
+    let currentVersion = await db.findOne('Version', { vid: db.currentOid() });
     let versions = await db.find('Version', {});
 
     res.json({

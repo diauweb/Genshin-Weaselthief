@@ -16,7 +16,13 @@ export default [
             "StepTextMapHash": "stepTextMapHash",
             "GuideTextMapHash": "guideTextMapHash",
             "ShowType": "showType",
-            "ExclusiveNpcList": "exculsiveNpcList"
+            "ExclusiveNpcList": "exculsiveNpcList",
+            "FinishCond": {
+                "@type": "array",
+                "@target": "finishCond",
+                "Type": "_type",
+                "Param": "_param",
+            }
         }
     },
     {
@@ -30,7 +36,13 @@ export default [
             "StepTextMapHash": "StepTextMapHash",
             "GuideTextMapHash": "GuideTextMapHash",
             "ShowType": "ShowType",
-            "ExclusiveNpcList": "ExculsiveNpcList"
+            "ExclusiveNpcList": "ExculsiveNpcList",
+            "FinishCond": {
+                "@type": "array",
+                "@target": "FinishCond",
+                "Type": "Type",
+                "Param": "Param",
+            }
         }
     }
 ]

@@ -51,16 +51,30 @@ function byString (o: any, s: any) {
 
 function remapJSON (remapRule: any, raw: any) {
     function remap(t: any) {
-        const current: any = {}
-        for(const k of Object.keys(t)) {
-            const v = t[k];
-            if (typeof v === "string") {
-                current[k] = byString(raw, v);
-            } else if (typeof v === 'object') {
-                current[k] = remap(v);
+        
+        if (t["@type"] === "array") {
+            const current: any[] = [];
+            const subrule = Object.assign({}, t);
+            delete subrule["@type"];
+            delete subrule["@target"];
+
+            for (const i of byString(raw, t["@target"])) {
+                current.push(remapJSON(subrule, i));
             }
+            return current;
+        } else {
+            const current: any = {}
+            for(const k of Object.keys(t)) {
+                const v = t[k];
+                if (typeof v === "string") {
+                    current[k] = byString(raw, v);
+                } else if (typeof v === 'object') {
+                    current[k] = remap(v);
+                }
+            }
+            return current;
         }
-        return current;
+
     }
     return remap(remapRule);
 }

@@ -45,6 +45,20 @@
             <tr><th>StepDesc</th><td><Translated id={q.StepDescTextMapHash}/></td></tr>
             <tr><th>GuideDesc</th><td><Translated id={q.GuideTipsTextMapHash}/></td></tr>
         </table>
+        <p><b>Finish conditions:</b></p>
+        <ul>
+            {#each q.FinishCond as cond}
+                {#if cond.Type}
+                <li>
+                    {#if cond.Type === 'QUEST_CONTENT_COMPLETE_TALK'}
+                    Finish Talk <a target="_blank" href={`/talk/${cond.Param[0]}`}>{cond.Param[0]}</a>
+                    {:else}
+                    {JSON.stringify(cond)}
+                    {/if}
+                </li>
+                {/if}
+            {/each}
+        </ul>
         {#if q.ExclusiveNpcList?.length > 0}
         <p>Exclusive Npcs:</p>
         <div style="margin: 5px; background: #fdfdfd;">

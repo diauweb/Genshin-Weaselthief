@@ -1,11 +1,11 @@
-import { currentOid, find, findOne } from "./db.js"
+import { tillCurrentOid, findOne } from "./db.js"
 import { inlineLanguage } from "./util.js"
 
 export async function searchDialogContaining(mapId: string) {
   console.time(`search dialog ${mapId}`)
   const nid = parseInt(mapId)
   const rst = await findOne('Dialog', {
-    _ver: currentOid(),
+    _ver: tillCurrentOid(),
     $or: [
       { TalkContentTextMapHash: nid },
       { TalkTitleTextMapHash: nid },
@@ -18,7 +18,7 @@ export async function searchDialogContaining(mapId: string) {
 
 export async function getDialog(id: string) {
   return findOne('Dialog', {
-    _ver: currentOid(),
+    _ver: tillCurrentOid(),
     Id: parseInt(id)
   });
 }
@@ -31,7 +31,7 @@ export async function getAllDialogs(id: string) {
   // backward find initial dialog first
   async function prev(k: Dialog): Promise<Dialog> {
     const nextDoc = await findOne('Dialog', {
-      _ver: currentOid(),
+      _ver: tillCurrentOid(),
       NextDialogs: k.Id
     }) as unknown as Dialog;
 
@@ -65,7 +65,7 @@ export async function searchTalkByDialog(id: string) {
   // backward find initial dialog first
   async function prev(k: Dialog): Promise<Dialog> {
     const nextDoc = await findOne('Dialog', {
-      _ver: currentOid(),
+      _ver: tillCurrentOid(),
       NextDialogs: k.Id
     }) as unknown as Dialog;
 
@@ -79,7 +79,7 @@ export async function searchTalkByDialog(id: string) {
 async function searchTalkByInitDialog(id: number) {
   console.time(`search talk by init dialog ${id}`)
   const rst = await findOne('Talk', {
-    _ver: currentOid(),
+    _ver: tillCurrentOid(),
     InitDialog: id
   })
   console.timeEnd(`search talk by init dialog ${id}`)
@@ -89,7 +89,7 @@ async function searchTalkByInitDialog(id: number) {
 export async function getTalk(id: string) {
   return {
     result: await findOne('Talk', {
-      _ver: currentOid(),
+      _ver: tillCurrentOid(),
       Id: parseInt(id)
     })
   }
@@ -97,7 +97,7 @@ export async function getTalk(id: string) {
 
 export async function getReminder(id: string) {
   const result = await findOne('Reminder', {
-    _ver: currentOid(),
+    _ver: tillCurrentOid(),
     Id: parseInt(id)
   });
   return { result }
@@ -105,7 +105,7 @@ export async function getReminder(id: string) {
 
 export async function searchReminder(id: string) {
   const result = await findOne('Reminder', {
-    _ver: currentOid(),
+    _ver: tillCurrentOid(),
     $or: [
       { SpeakerTextMapHash: parseInt(id) },
       { ContentTextMapHash: parseInt(id) },

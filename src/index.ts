@@ -1,14 +1,14 @@
 import express from 'express'
 import fse from 'fs-extra'
+import morgan from 'morgan'
 import path from 'path'
+import * as db from './db.js'
 import { getAllDialogs, getDialog, getReminder, getTalk, searchDialogContaining, searchReminder, searchTalkByDialog } from './dialog.js'
 import * as git from './git.js'
 import { getQuests } from './quest.js'
 import { getAllNpcs, getDetailNpc, getNpc } from './role.js'
 import { getAllText, getText, searchText } from './text.js'
 import { getVersion, setVersion } from './version.js'
-import morgan from 'morgan'
-import * as db from './db.js'
 
 
 const app = express();

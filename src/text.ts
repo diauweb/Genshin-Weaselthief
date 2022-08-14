@@ -1,4 +1,4 @@
-import { currentOid, find, findIter, findOne } from './db.js'
+import { tillCurrentOid, find, findIter, findOne } from './db.js';
 
 export async function searchText (text: string, lang: string) {
     type Text = {
@@ -18,7 +18,7 @@ export async function searchText (text: string, lang: string) {
     }
 
     const iter = await findIter('TextMap', {
-        _ver: currentOid(),
+        _ver: tillCurrentOid(),
         [plang]: {
             $regex: text,
             $options: 'i'
@@ -32,7 +32,7 @@ export async function searchText (text: string, lang: string) {
 
 export async function getText (text: string) {
     return findOne ('TextMap', {
-        _ver: currentOid(),
+        _ver: tillCurrentOid(),
         hash: parseInt(text),
     })
 }

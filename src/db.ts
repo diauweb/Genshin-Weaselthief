@@ -1,17 +1,17 @@
 import deepEqual from 'fast-deep-equal';
-import { Collection, Document, Filter, MongoClient, MongoServerError, ObjectId, WithId } from "mongodb";
+import { Collection, Document, Filter, MongoClient, MongoServerError, WithId } from "mongodb";
 import ProgressBar from 'progress';
 import { getAllVersions } from "./git.js";
 import { getSchemaObject, Schema } from "./schema.js";
 import { getVersion } from "./version.js";
 
-import TextMap from './schema/TextMap.js';
+import Dialog from './schema/Dialog.js';
+import MainQuest from './schema/MainQuest.js';
 import NPC from './schema/NPC.js';
 import Quest from './schema/Quest.js';
-import MainQuest from './schema/MainQuest.js';
-import Dialog from './schema/Dialog.js';
-import Talk from './schema/Talk.js';
 import Reminder from './schema/Reminder.js';
+import Talk from './schema/Talk.js';
+import TextMap from './schema/TextMap.js';
 
 const uri = "mongodb://127.0.0.1:27017";
 
@@ -19,7 +19,7 @@ const client = new MongoClient(uri, { keepAlive: true });
 const cachedVersionId : Record<string, number> = {};
 let db = client.db("wt");
 
-const dataVersion = 3;
+const dataVersion = 24100;
 export async function initDatabase() {
     const integrity = await checkIntegrity();
     if (integrity !== 'ok') {
@@ -161,7 +161,7 @@ async function addTextMaps() {
         let dirty = 0;
         for (const k of Object.keys(cnLang)) {
             const object = {
-                _ver: ver._id,
+                _ver: ver.vid,
                 hash: parseInt(k),
                 cn: cnLang[k],
                 en: enLang[k],
@@ -187,7 +187,7 @@ async function addTextMaps() {
             }
             progress.tick({ dirty });
         }
-
+        
         progress.terminate();
         console.log(`[db] created ${ver.ver} TextMap`);
     });
@@ -196,12 +196,21 @@ async function addTextMaps() {
     await textColl.createIndex({ hash: 1 })
 }
 
-async function foreachVersion(cb: (doc: Document) => void) {
+type Version = {
+    _id: { oid: string }
+    hash: string
+    fullVersion: string
+    ver: string
+    vid: number
+}
+
+async function foreachVersion(cb: (doc: Version) => void) {
     const versions = db.collection("Version").find();
     const fw: WithId<Document>[] = [];
     await versions.forEach(o => { fw.push(o); });
-    for (const o of fw) {
-        await cb(o);
+    // old version comes first
+    for (const o of fw.reverse()) {
+        await cb(o as unknown as Version);
     }
 }
 
@@ -223,6 +232,10 @@ export function getVersionOid(sha: string) {
 
 export function currentOid() {
     return getVersionOid(getVersion()!);
+}
+
+export function tillCurrentOid() {
+    return { $lte: currentOid() };
 }
 
 export async function find(collection: string, query: any) {

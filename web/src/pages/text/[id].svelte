@@ -48,7 +48,7 @@
         loadButton.disabled = true
         fetch(`/api/find_text?q=${id}`).then(r => r.json()
             .then(o => {
-                hTexts = [...o.result]
+                hTexts = [...o.result.reverse()]
                 loadButton.disabled = false
             })
         )

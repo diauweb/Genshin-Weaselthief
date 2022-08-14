@@ -26,8 +26,8 @@
     }
 
     function search() {
-        update();
-        $goto("/search_text", { keyword: input.value });
+        document.location = `/search_text?keyword=${encodeURIComponent(input.value)}`;
+        // document.location.reload();
     }
 
     const unsub = lang.subscribe(() => update());

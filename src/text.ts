@@ -34,6 +34,7 @@ export async function getText (text: string) {
     return findOne ('TextMap', {
         _ver: tillCurrentOid(),
         hash: parseInt(text),
+        delete: null,
     })
 }
 

@@ -19,7 +19,7 @@ const client = new MongoClient(uri, { keepAlive: true });
 const cachedVersionId : Record<string, number> = {};
 let db = client.db("wt");
 
-const dataVersion = 24100;
+const dataVersion = 24103;
 export async function initDatabase() {
     const integrity = await checkIntegrity();
     if (integrity !== 'ok') {
@@ -157,7 +157,7 @@ async function addTextMaps() {
             return;
         }
 
-        const progress = new ProgressBar(`TextMap ${ver.ver} [:bar] :current/:total d=:dirty`, { total: Object.keys(cnLang).length });
+        const progress = new ProgressBar(`TextMap ${ver.ver} [:bar] :current/:total d=:dirty`, { total: Object.keys(cnLang).length }); 
         let dirty = 0;
         for (const k of Object.keys(cnLang)) {
             const object = {
@@ -170,15 +170,21 @@ async function addTextMaps() {
 
             // exclude empty strings
             if (cnLang[k] === '') {
+                if (currentCn[k] !== undefined && currentCn[k] !== '') {
+                    Object.assign(object, { delete: true });
+                    await textColl.insertOne(object);
+                    delete currentCn[k];
+                }
+
                 progress.total--;
                 continue;
             }
 
             const isDirty = 
                 currentCn[k] === undefined || 
-                currentCn[k] !== cnLang[k] ||
-                currentEn[k] !== enLang[k] ||
-                currentJp[k] !== jpLang[k];
+                currentCn[k] !== (cnLang[k] ?? '') ||
+                currentEn[k] !== (enLang[k] ?? '') ||
+                currentJp[k] !== (jpLang[k] ?? '');
             
             if (isDirty) {
                 [currentCn[k], currentEn[k], currentJp[k]] = [cnLang[k], enLang[k], jpLang[k]];
@@ -243,11 +249,11 @@ export async function find(collection: string, query: any) {
 }
 
 export function findIter(collection: string, query: any) {
-    return db.collection(collection).find(query);
+    return db.collection(collection).find(query).sort({ _ver: -1 });
 }
 
 export async function findOne(collection: string, query: Filter<Document>) {
-    return db.collection(collection).findOne(query);
+    return findIter(collection, query).limit(1).next();
 }
 
 export function collection (name: string) {

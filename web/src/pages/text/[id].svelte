@@ -48,7 +48,7 @@
         loadButton.disabled = true
         fetch(`/api/find_text?q=${id}`).then(r => r.json()
             .then(o => {
-                hTexts = [...o.result.reverse()]
+                hTexts = [...o.result]
                 loadButton.disabled = false
             })
         )
@@ -76,12 +76,23 @@
 <div style="margin: 1em 0">
     <fluent-accordion>
         {#each hTexts as t}
-            <fluent-accordion-item>
-                <span slot="heading">{#await findByOid(t._ver) then v}{v.ver}{/await}</span>
+            <fluent-accordion-item class:history-delete={t.delete}>
+                <span slot="heading">
+                    {#await findByOid(t._ver) then v}{v.ver}{/await}
+                    {#if t.delete} [delete]{/if}
+                </span>
+                {#if !t.delete}
                 <p><TextRenderer text={t.cn} /></p>
                 <p><TextRenderer text={t.en}/></p>
                 <p><TextRenderer text={t.jp}/></p>
+                {/if}
             </fluent-accordion-item>
         {/each}
     </fluent-accordion>
 </div>
+
+<style>
+    .history-delete {
+        background-color: #FFF0F0;
+    }
+</style>

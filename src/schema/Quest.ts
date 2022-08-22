@@ -5,6 +5,20 @@ export default [
         "type": "remapColl"
     },
     {
+        "match": ">=3.0.0",
+        "remap": {
+            "Id": "subId",
+            "SubId": "subId",
+            "MainId": "mainId",
+            "Order": "order",
+            "DescTextMapHash": "descTextMapHash",
+            "StepTextMapHash": "stepTextMapHash",
+            "GuideTextMapHash": "guideTextMapHash",
+            "ShowType": "showType",
+            // ExclusiveNpcList and FinishCond is removed after 3.0.0
+        }
+    },
+    {
         "match": ">=2.7.0",
         "remap": {
             // add master key to dedupe

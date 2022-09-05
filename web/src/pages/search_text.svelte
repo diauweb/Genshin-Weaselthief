@@ -30,6 +30,14 @@
         // document.location.reload();
     }
 
+    function toDotVersion(number) {
+        const major = Math.floor(number / 10000);
+        const minor = Math.floor((number - major * 10000) / 100);
+        const revision = number - major * 10000 - minor * 100;
+
+        return `${major}.${minor}.${revision}`;
+    }
+
     const unsub = lang.subscribe(() => update());
 
     onDestroy(unsub);
@@ -57,6 +65,7 @@
                         {e.hash}
                     </a>
                 </b>
+                <span class="weak">{toDotVersion(e._ver)}</span>
                 <TextRenderer 
                     text={e[$lang]}
                     highlight={$params.keyword} 
@@ -78,5 +87,9 @@
     .search {
         display: flex;
         align-items: center;
+    }
+
+    .weak {
+        color: gray;
     }
 </style>

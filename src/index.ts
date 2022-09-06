@@ -3,7 +3,7 @@ import fse from 'fs-extra'
 import morgan from 'morgan'
 import path from 'path'
 import * as db from './db.js'
-import { getAllDialogs, getDialog, getReminder, getTalk, searchDialogContaining, searchReminder, searchTalkByDialog } from './dialog.js'
+import { getAllDialogs, getDialog, getReminder, getTalk, searchAllReminder, searchDialogContaining, searchReminder, searchTalkByDialog } from './dialog.js'
 import * as git from './git.js'
 import { getQuests } from './quest.js'
 import { getAllNpcs, getDetailNpc, getNpc } from './role.js'
@@ -85,6 +85,7 @@ query('/get_talk', q => getTalk(q))
 query('/get_quests', q => getQuests(q))
 query('/search_reminders', q => searchReminder(q))
 query('/get_reminder', q => getReminder(q))
+query('/all_reminder', q => searchAllReminder(q))
 query('/find_text', q => getAllText(q))
 query('/npc_details', q => getDetailNpc(q))
 

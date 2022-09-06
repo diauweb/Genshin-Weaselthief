@@ -5,10 +5,17 @@
     export let id
     let data
 
+    let allReminder
+
     onMount(async function () {
         const b = await (await fetch(`/api/get_reminder?q=${id}`)).json()
         data = b.result
     })
+
+    async function loadAllReminder() {
+        const data = []
+        allReminder = (await (await fetch(`/api/all_reminder?q=${id}`)).json()).result
+    }
 </script>
 
 {#if data}
@@ -27,6 +34,18 @@
     </tr>
     {/if}
 </table>
+
+<h2>Reminder Group</h2>
+<button on:click={loadAllReminder}>Load Group</button>
+{#if allReminder}
+{#each allReminder as r}
+<div class="card">
+    <a href={`/reminder/${r.Id}`}>{r.Id}</a>
+    <b><Translated id={r.SpeakerTextMapHash}/></b>
+    <Translated id={r.ContentTextMapHash} />
+</div>
+{/each}
+{/if}
 {:else}
 <i>Loading</i>
 {/if}
@@ -34,5 +53,12 @@
 <style>
     th {
         text-align: right;
+    }
+
+    .card {
+        background-color: #eee;
+        margin: 5px;
+        padding: 8px 10px;
+        border-radius: 5px;
     }
 </style>

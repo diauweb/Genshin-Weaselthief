@@ -16,7 +16,7 @@
 
 </script>
 
-<p><strong>Proof-Of-Concept project, alpha quality.</strong></p>
+<p><strong>Search Through Anime Game Texts</strong></p>
 <p class="disclaimer">
     This project is made for educational and research purpose.<br>
     This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with miHoYo, or any of its subsidiaries or its affiliates. <br>
@@ -35,6 +35,6 @@
 
     .disclaimer {
         color: gray;
-        text-size: small;
+        font-size: small;
     }
 </style>

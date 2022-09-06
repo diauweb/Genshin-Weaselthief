@@ -1,4 +1,4 @@
-import { tillCurrentOid, findOne } from "./db.js"
+import { tillCurrentOid, findOne, collection } from "./db.js"
 import { inlineLanguage } from "./util.js"
 
 export async function searchDialogContaining(mapId: string) {
@@ -112,4 +112,41 @@ export async function searchReminder(id: string) {
     ]
   })
   return { result: result?.Id }
+}
+
+export async function searchAllReminder(id: string) {
+  let dialog = (await getReminder(id)).result
+  for(;;) {
+    const now = await findOne('Reminder', {
+      _ver: tillCurrentOid(),
+      NextReminderId: dialog?.Id
+    })
+
+    if (now === null) {
+      break;
+    } else {
+      dialog = now;
+    }
+  }
+
+  const allReminder = collection('Reminder').aggregate([
+    { $match: { _id: dialog?._id }},
+    { $graphLookup: {
+      from: "Reminder",
+      startWith: "$NextReminderId",
+      connectFromField: "NextReminderId",
+      connectToField: "Id",
+      as: "ReminderList",
+    }}
+  ])
+
+  const aggrResult: any = (await allReminder.toArray())[0]
+  const result = []
+  result.push(...aggrResult.ReminderList)
+  delete aggrResult.ReminderList
+  result.push(aggrResult)
+
+  result.sort((a, b) => a.Id - b.Id)
+
+  return { result: await Promise.all(result.map(inlineLanguage)) }
 }

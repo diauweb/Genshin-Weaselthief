@@ -55,7 +55,7 @@ export async function getAllDialogs(id: string) {
   await dfs(first)
 
   console.timeEnd(`all_dialogs ${id}`)
-  return Promise.all(Array.from(dialogs.values()).map(inlineLanguage))
+  return Promise.all(Array.from(dialogs.values()).sort((a, b) => a.Id - b.Id).map(inlineLanguage))
 }
 
 export async function searchTalkByDialog(id: string) {

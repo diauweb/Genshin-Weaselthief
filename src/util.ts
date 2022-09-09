@@ -16,7 +16,7 @@ export async function inlineLanguage(resultItem: any) {
     Object.values(translate).forEach(e => {
       if (typeof resultItem[e] !== 'object') {
         const hs = resultItem[e]
-        resultItem[e] = { hash: hs, cn: hs, en: hs, jp: hs }
+        resultItem[e] = { hash: hs }
       }
     })
   

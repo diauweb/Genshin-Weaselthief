@@ -23,7 +23,7 @@
     {/if}
 {:else}
     {#if highlight}
-        {#each value.split(highlight).flatMap(e => [e, highlight]).slice(0, -1) as e, i }
+        {#each `${value}`.split(highlight).flatMap(e => [e, highlight]).slice(0, -1) as e, i }
             {#if i % 2}
             <mark>{e}</mark>
             {:else}

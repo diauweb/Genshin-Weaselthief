@@ -1,5 +1,6 @@
 <script lang="ts">
     import { goto } from '@roxi/routify'
+    import { getRole } from '../role-util.js'
 
     import Translated from './Translated.svelte'
     import Role from './Role.svelte'
@@ -17,6 +18,16 @@
 <div class="card" class:player="{data?.TalkRole__Type === 'TALK_ROLE_PLAYER'}">
     <details>
         <summary>
+            <b>
+            {#if data?.TalkRoleNameTextMapHash?.cn }
+                <Translated id={data.TalkRoleNameTextMapHash} />
+            {:else if data.TalkRole__Type === 'TALK_ROLE_NPC' }
+                {#await getRole(data.TalkRole__Id) then npc}
+                    <Translated id={npc.result.NameTextMapHash} />
+                {/await}
+            {/if}
+            </b>
+
             <Translated id={data.TalkContentTextMapHash}/>
         </summary>
         <p>

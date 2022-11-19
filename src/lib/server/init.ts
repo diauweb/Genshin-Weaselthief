@@ -1,4 +1,4 @@
-import { getVersioningCommit } from './git';
+import { getVersioningCommit, initGit } from './git';
 import { initDatabase } from './db';
 import { setVersion } from './version';
 import log from 'npmlog';
@@ -17,6 +17,7 @@ export function isAppReady() {
 
 async function initApp() {
     log.info('init', 'initing app version %j', __version__);
+    await initGit();
     setVersion((await getVersioningCommit()).hash);
     await initDatabase();
     log.info('init', 'app is ready');

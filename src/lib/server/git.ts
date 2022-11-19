@@ -4,13 +4,15 @@ import log from 'npmlog';
 let git: ReturnType<typeof simpleGit>;
 let gitOk = false;
 
-try {
-	git = simpleGit('./GenshinData');
-	if (!(await git.checkIsRepo())) throw new Error('data is not in a repository');
-	gitOk = true;
-} catch (e) {
-    log.error('git', 'git module not enabled');
-	throw e;
+export async function initGit() {
+	try {
+		git = simpleGit('./GenshinData');
+		if (!(await git.checkIsRepo())) throw new Error('data is not in a repository');
+		gitOk = true;
+	} catch (e) {
+		log.error('git', 'git module not enabled: %j', e);
+		throw e;
+	}
 }
 
 export function gitAvailable() {

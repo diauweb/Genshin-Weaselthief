@@ -21,10 +21,11 @@ Thanks for Dimbreath's [Genshin Data](https://github.com/Dimbreath/GenshinData) 
 
 ## Develop Weaselthief
 - Clone this repo
-- Run `yarn install`
-- Run `yarn install` in `web` directory
+- Run `pnpm install`
 
-Then, use `yarn dev` to start a development session, and use `yarn build` to make a build.
+Then, use `pnpm dev` to start a development session, and use `pnpm build` to make a build.
+> **Note**
+> Use pnpm to install as the project patches some dependencies for packaing to work.
 
 ---
 This program is free software.

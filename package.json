@@ -49,5 +49,10 @@
 	},
 	"optionalDependencies": {
 		"exceljs": "^4.3.0"
+	},
+	"pnpm": {
+		"patchedDependencies": {
+			"@sveltejs/adapter-node@1.0.0-next.100": "patches/@sveltejs__adapter-node@1.0.0-next.100.patch"
+		}
 	}
 }

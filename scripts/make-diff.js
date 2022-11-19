@@ -11,7 +11,7 @@ import simpleGit from 'simple-git'
 
 // const [v1, v2] = [process.argv[2], process.args[3]]
 
-const [v1, v2] = ["d56ed231c4513963d27051dd6f7828f0e06c2588", "45c509efd76550b17e394774fd90bec248ccefdb"]
+const [v1, v2] = ["4c5e4f6889ee820be814c71e663bf19c2bf2275d", "e7c944395d00f0dc1848a66703c73d9763dfc5cc"]
 
 const git = simpleGit('./GenshinData')
 
@@ -169,7 +169,11 @@ async function addDiff(tableName, dispName, masterKey, compares) {
 
     for (const k of diff) {
         const vs = compares.map(ek => {
-            const e = ek.toLowerCase()
+            const e = ek.toLowerCase();
+            if (k.type === 'delete') {
+                return '[deleted]'
+            }
+            
             if (e.endsWith("textmaphash")) {
                 const t = k.type === 'orig' ? v1l : v2l
                 return t[k.value[e]]

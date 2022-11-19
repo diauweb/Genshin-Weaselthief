@@ -134,3 +134,8 @@ dist
 GenshinData/
 GenshinData
 Data/
+
+.DS_Store/
+/build
+/.svelte-kit
+/package

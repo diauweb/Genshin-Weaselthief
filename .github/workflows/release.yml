@@ -12,13 +12,11 @@ jobs:
           # preserve tags
           fetch-depth: 0
       - name: Install
-        run: yarn install
-      - name: Install Web
-        run: cd web && yarn install
+        run: pnpm install
       - name: Build
-        run: yarn build
+        run: pnpm build
       - name: Package
-        run: cd out && zip weaselthief.zip -r . && mv weaselthief.zip ..
+        run: cd build && zip weaselthief.zip -r . && mv weaselthief.zip ..
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')

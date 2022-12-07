@@ -5,6 +5,26 @@ export default [
         "type": "remapColl"
     },
     {
+        "match": ">=3.3.0",
+        "remap": {
+            "Id": "subId",
+            "SubId": "subId",
+            "MainId": "mainId",
+            "Order": "order",
+            "DescTextMapHash": "descTextMapHash",
+            "StepTextMapHash": "stepTextMapHash",
+            "GuideTextMapHash": "guideTextMapHash",
+            "ShowType": "showType",
+            "ExclusiveNpcList": "exculsiveNpcList",
+            "FinishCond": {
+                "@type": "array",
+                "@target": "finishCond",
+                "Type": "_type",
+                "Param": "_param",
+            },
+        },
+    },
+    {
         "match": ">=3.0.0",
         "remap": {
             "Id": "subId",

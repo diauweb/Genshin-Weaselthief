@@ -5,6 +5,19 @@ export default [
         filename: "ExcelBinOutput/DialogExcelConfigData.json"
     },
     {
+        match: ">=3.3.0",
+        remap: {
+            Id: 'id',
+            NextDialogs: 'nextDialogs',
+            TalkShowType: 'talkShowType',
+            TalkRole__Type: 'talkRole.type',
+            TalkRole__Id: 'talkRole.id',
+            TalkContentTextMapHash: "talkContentTextMapHash",
+            TalkTitleTextMapHash: "talkTitleTextMapHash",
+            TalkRoleNameTextMapHash: "talkRoleNameTextMapHash",
+        }
+    },
+    {
         match: ">=2.7.0",
         remap: {
             Id: 'id',

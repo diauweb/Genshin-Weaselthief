@@ -5,6 +5,19 @@ export default [
         filename: "ExcelBinOutput/TalkExcelConfigData.json"
     },
     {
+        match: ">=3.3.0",
+        remap: {
+            Id: 'id',
+            BeginWay: 'beginWay',
+            ActiveMode: 'activeMode',
+            InitDialog: 'initDialog',
+            NextRandomTalks: 'nextRandomTalks',
+            NpcId: "npcId",
+            QuestId: "questId",
+            LockGameTime: "lockGameTime",
+        }
+    },
+    {
         match: ">=2.7.0",
         remap: {
             Id: '_id',

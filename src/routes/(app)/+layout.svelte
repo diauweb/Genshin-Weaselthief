@@ -1,7 +1,7 @@
 <script lang="ts">
-	import 'uikit/dist/js/uikit';
-	import 'uikit/dist/css/uikit.css';
-	import Lang from './Lang.svelte';
+	// import 'uikit/dist/js/uikit';
+	// import 'uikit/dist/css/uikit.css';
+    import { lang } from '$lib/client-settings';
 
 	let ver = __version__;
 	export let data: { dataver: { ver: string }};
@@ -22,13 +22,23 @@
 					<div class="uk-navbar-dropdown">
 						<ul class="uk-nav uk-navbar-dropdown-nav">
 							<li><a href="/npc">NPC</a></li>
+							<li><a href="/document">Documents</a></li>
 						</ul>
 					</div>
 				</li>
 			</ul>
-		</div>
-		<div class="uk-navbar-right">
-			<Lang />
+			<ul class="uk-navbar-nav">
+				<li>
+					<a href={"#"}>{$lang.toUpperCase()}</a>
+					<div class="uk-navbar-dropdown">
+						<ul class="uk-nav uk-navbar-dropdown-nav">
+							<li><a href={"#"} on:click="{() => lang.set('cn')}">CN</a></li>
+							<li><a href={"#"} on:click="{() => lang.set('en')}">EN</a></li>
+							<li><a href={"#"} on:click="{() => lang.set('jp')}">JP</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
 		</div>
 	</div>
 </header>

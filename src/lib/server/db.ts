@@ -14,6 +14,8 @@ import Reminder from './schema/Reminder';
 import Talk from './schema/Talk';
 import TextMap from './schema/TextMap';
 import Material from './schema/Material';
+import Document from './schema/Document';
+import Localization from './schema/Localization';
 
 const uri = 'mongodb://127.0.0.1:27017';
 
@@ -51,6 +53,7 @@ export async function initDatabase() {
 		console.timeEnd('regenerate');
 	}
 
+	// get db version list
 	db.collection('Version')
 		.find({})
 		.forEach((e) => {
@@ -88,7 +91,9 @@ const collections: [string, Schema, OneOrMany<KV>?][] = [
 	['Dialog', Dialog, [{ Id: 1 }, { TalkRole__Id: 1 }, { NextDialogs: 1 }, { TalkContentTextMapHash: 1, TalkTitleTextMapHash: 1, TalkRoleNameTextMapHash: 1}]],
 	['Talk', Talk, { Id: 1 }],
 	['Reminder', Reminder, { Id: 1 }],
-	['Material', Material, { Id: 1 }]
+	['Material', Material, { Id: 1 }],
+	['Document', Document, { Id: 1 }],
+	['Localization', Localization, { Id: 1}],
 ];
 
 async function addCollections() {

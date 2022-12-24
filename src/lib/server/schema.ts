@@ -37,9 +37,9 @@ export async function getSchemaObject (schema: Schema | ((args: any) => Schema),
 function byString (o: any, s: any) {
     s = s.replace(/\[(\w+)\]/g, '.$1');
     s = s.replace(/^\./, '');
-    let a = s.split('.');
+    const a = s.split('.');
     for (let i = 0, n = a.length; i < n; ++i) {
-        let k = a[i];
+        const k = a[i];
         if (k in o) {
             o = o[k];
         } else {

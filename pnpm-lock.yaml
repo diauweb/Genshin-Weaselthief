@@ -9,8 +9,6 @@ specifiers:
   '@sveltejs/adapter-auto': next
   '@sveltejs/adapter-node': 1.0.0-next.100
   '@sveltejs/kit': next
-  '@svelteuidev/composables': ^0.7.7
-  '@svelteuidev/core': ^0.7.7
   '@types/npmlog': ^4.1.4
   '@types/progress': ^2.0.5
   '@types/semver': ^7.3.13
@@ -39,8 +37,6 @@ specifiers:
   vite: ^4.0.3
 
 dependencies:
-  '@svelteuidev/composables': 0.7.7
-  '@svelteuidev/core': 0.7.7_khnq6f6biuveqn4hvhjveiokue
   fast-deep-equal: 3.1.3
   fs-extra: 10.1.0
   mongodb: 4.13.0
@@ -1134,16 +1130,6 @@ packages:
     dev: false
     optional: true
 
-  /@floating-ui/core/0.7.3:
-    resolution: {integrity: sha512-buc8BXHmG9l82+OQXOFU3Kr2XQx9ys01U/Q9HMIrZ300iLc8HLMgh7dcCqgYzAzf4BkoQvDcXf5Y+CuEZ5JBYg==}
-    dev: false
-
-  /@floating-ui/dom/0.5.2:
-    resolution: {integrity: sha512-z1DnEa7F3d8Fm/eXSbii8UEGpcjZGkQaYYUI0WpEVgD3vBfebDW8j/3ysusxonuMexoigA+A3b/fYH7sEqiwyg==}
-    dependencies:
-      '@floating-ui/core': 0.7.3
-    dev: false
-
   /@humanwhocodes/config-array/0.11.8:
     resolution: {integrity: sha512-UybHIJzJnR5Qc/MsD9Kr+RpO2h+/P1GhOwdiLPXK5TWk5sgTdu88bTD9UP+CKbPPh5Rni1u0GjAdYQLemG8g+g==}
     engines: {node: '>=10.10.0'}
@@ -1281,10 +1267,6 @@ packages:
       rollup: 2.79.1
     dev: true
 
-  /@stitches/core/1.2.8:
-    resolution: {integrity: sha512-Gfkvwk9o9kE9r9XNBmJRfV8zONvXThnm1tcuojL04Uy5uRyqg93DC83lDebl0rocZCfKSjUv+fWYtMQmEDJldg==}
-    dev: false
-
   /@sveltejs/adapter-auto/1.0.0-next.91_l5ueyfihz3gpzzvvyo2ean5u3e:
     resolution: {integrity: sha512-U57tQdzTfFINim8tzZSARC9ztWPzwOoHwNOpGdb2o6XrD0mEQwU9DsII7dBblvzg+xCnmd0pw7PDtXz5c5t96w==}
     peerDependencies:
@@ -1350,22 +1332,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /@svelteuidev/composables/0.7.7:
-    resolution: {integrity: sha512-pl7OSIOuez57LUQW+Eu4+NuZCqa6Ee0vhYp1WrHJjI3ICGosmv4RifF43NEuJSFjTw+Z7gTrGDIf9Znu21oTRA==}
-    dev: false
-
-  /@svelteuidev/core/0.7.7_khnq6f6biuveqn4hvhjveiokue:
-    resolution: {integrity: sha512-SUt8y8v1OyHaku2wvqywZrqry4WhXtAY1RK4rvq3iZhmstE6G3yTJ5biJjmz46uvQYLFIDTv7Ecag6ooF2rJig==}
-    peerDependencies:
-      '@svelteuidev/composables': 0.7.7
-      svelte: '>=3.47.0'
-    dependencies:
-      '@floating-ui/dom': 0.5.2
-      '@stitches/core': 1.2.8
-      '@svelteuidev/composables': 0.7.7
-      svelte: 3.55.0
-    dev: false
 
   /@types/cookie/0.5.1:
     resolution: {integrity: sha512-COUnqfB2+ckwXXSFInsFdOAWQzCCx+a5hq2ruyj+Vjund94RJQd4LG2u9hnvJrTgunKAaax7ancBYlDrNYxA0g==}
@@ -3354,6 +3320,7 @@ packages:
   /svelte/3.55.0:
     resolution: {integrity: sha512-uGu2FVMlOuey4JoKHKrpZFkoYyj0VLjJdz47zX5+gVK5odxHM40RVhar9/iK2YFRVxvfg9FkhfVlR0sjeIrOiA==}
     engines: {node: '>= 8'}
+    dev: true
 
   /tar-stream/2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}

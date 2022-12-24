@@ -11,7 +11,6 @@ export async function inlineLanguage(resultItem: any) {
       _ver: resultItem._ver,
       hash: { $in: Object.keys(translate).map(i => parseInt(i)) }
     }))
-    
     q.forEach(e => resultItem[translate[e.hash]] = e)
     Object.values(translate).forEach(e => {
       if (typeof resultItem[e] !== 'object') {

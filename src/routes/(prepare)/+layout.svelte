@@ -1,6 +1,6 @@
 <script lang="ts">
-	import 'uikit/dist/js/uikit';
-	import 'uikit/dist/css/uikit.css';
+	// import 'uikit/dist/js/uikit';
+	// import 'uikit/dist/css/uikit.css';
 	import { onMount } from 'svelte';
 	onMount(() => {
 		setInterval(() => {

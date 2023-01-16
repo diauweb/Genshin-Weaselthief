@@ -11,7 +11,7 @@ export function toDotVersion(number: number) {
     return `${major}.${minor}.${revision}`;
 }
 
-export function stripBsid(obj) {
+export function stripBsid(obj : any) {
     const newobj = {...obj};
     for(const [k, v] of Object.entries(newobj)) {
         if (k === "_id") delete newobj[k];

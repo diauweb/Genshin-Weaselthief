@@ -11,7 +11,7 @@ import simpleGit from 'simple-git'
 
 // const [v1, v2] = [process.argv[2], process.args[3]]
 
-const [v1, v2] = ["e7c944395d00f0dc1848a66703c73d9763dfc5cc", "c45d3b895bd01822fda343d4d8669a01fa462799"]
+const [v1, v2] = ["c45d3b895bd01822fda343d4d8669a01fa462799", "80d36aa66d46ec86d5e6c3ad124a540e3e439f36"]
 
 const git = simpleGit('./GenshinData')
 

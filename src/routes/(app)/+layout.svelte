@@ -3,6 +3,7 @@
 	// import 'uikit/dist/css/uikit.css';
     import { lang } from '$lib/client-settings';
 
+	// eslint-disable-next-line no-undef
 	let ver = __version__;
 	export let data: { dataver: { ver: string }};
 </script>

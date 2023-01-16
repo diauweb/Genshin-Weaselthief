@@ -58,7 +58,8 @@ function remapJSON (remapRule: any, raw: any) {
             delete subrule["@type"];
             delete subrule["@target"];
 
-            for (const i of byString(raw, t["@target"])) {
+            const target = byString(raw, t["@target"]) ?? [];
+            for (const i of target) {
                 current.push(remapJSON(subrule, i));
             }
             return current;

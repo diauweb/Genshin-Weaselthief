@@ -1,10 +1,10 @@
 # Genshin Weaselthief
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/diauweb/genshin-weaselthief/Main)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/diauweb/Genshin-Weaselthief/release.yml)
 [![GitHub release](https://img.shields.io/badge/download-latest-green)](https://github.com/diauweb/Genshin-WeaselThief/releases/latest)
 
-A data digger for the *a certain Anime Game*.
+A data digger for *a certain Anime Game*.
 
 Thanks for Dimbreath's [Genshin Data](https://github.com/Dimbreath/GenshinData) repository for data source.
 
@@ -16,16 +16,16 @@ Thanks for Dimbreath's [Genshin Data](https://github.com/Dimbreath/GenshinData) 
 ## Run Weaselthief
 - Install Node.JS 16+ and MongoDB
 - Download [latest build](https://github.com/diauweb/Genshin-WeaselThief/releases/latest) from Release page.
-- Clone [GenshinData](https://github.com/Dimbreath/GenshinData) into the project folder.
+- Place your GenshinData git repository into the project folder.
 - Run `index.js` to build data & run
 
 ## Develop Weaselthief
 - Clone this repo
 - Run `pnpm install`
 
-Then, use `pnpm dev` to start a development session, and use `pnpm build` to make a build.
+Then, run `pnpm dev` to start a development session, and run `pnpm build` to make a build.
 > **Note**
-> Use pnpm to install as the project patches some dependencies for packaing to work.
+> Use pnpm as your package manager as the project patches some dependencies for packaging to work.
 
 ---
 This program is free software.

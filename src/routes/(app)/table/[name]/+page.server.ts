@@ -2,8 +2,7 @@ import type {PageServerLoad} from "./$types";
 import {error} from "@sveltejs/kit";
 import LRU from 'lru-cache';
 import {getFile} from "$lib/server/git";
-import type {ZippedExcel} from "$lib/util";
-import {zipExcel} from "$lib/util";
+import {zipExcel, ZippedExcel} from "$lib/server/util";
 
 const cache = new LRU<string, ZippedExcel>({
     ttl: 60000 * 10,

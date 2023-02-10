@@ -1,8 +1,7 @@
-
-import { searchAllReminder } from '$lib/server/dialog';
-import { getNpc } from '$lib/server/role';
-import { toPlainObject } from '$lib/util';
-import { error } from '@sveltejs/kit';
+import {searchAllReminder} from '$lib/server/dialog';
+import {toPlainObject} from '$lib/util';
+import {error} from '@sveltejs/kit';
+import type {PageServerLoad} from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
     const id = params.id;

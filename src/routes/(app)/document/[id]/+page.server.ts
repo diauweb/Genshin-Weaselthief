@@ -1,23 +1,23 @@
-import { toPlainObject } from '$lib/util';
-import { error } from '@sveltejs/kit';
-import { currentOid, findOne } from "$lib/server/db";
-import { getVersion } from "$lib/server/version";
-import { getFile } from "$lib/server/git";
+import {toPlainObject} from '$lib/util';
+import {error} from '@sveltejs/kit';
+import {findOne, tillCurrentOid} from "$lib/server/db";
+import {getVersion} from "$lib/server/version";
+import {getFile} from "$lib/server/git";
 import log from 'npmlog';
 
 // import { inlineLanguage } from "$lib/server/util";
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({params}) => {
     const id = params.id;
     if (!id) throw error(404);
 
     const document = await findOne('Document', {
-        _ver: currentOid(),
+        _ver: tillCurrentOid(),
         Id: parseInt(id),
     });
 
     const content = await findOne('Localization', {
-        _ver: currentOid(),
+        _ver: tillCurrentOid(),
         Id: document.ContentLocalizedId,
     });
     

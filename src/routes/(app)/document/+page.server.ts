@@ -1,10 +1,12 @@
-import { toPlainObject } from '$lib/util';
-import { inlineLanguage } from "$lib/server/util";
-import { tillCurrentOid, currentOid, find } from '$lib/server/db';
+import {toPlainObject} from '$lib/util';
+import {inlineLanguage} from "$lib/server/util";
+import {find, tillCurrentOid} from '$lib/server/db';
+import type {PageServerLoad} from "./$types";
 
-export const load: PageLoad = async () => {
+export const load: PageServerLoad = async () => {
     const documents = await find('Document', {
-        _ver: currentOid(),
+        _ver: tillCurrentOid(),
+        ContentLocalizedId: {$exists: true},
     });
     const d = await Promise.all(documents.map(e => inlineLanguage({...e, _ver: tillCurrentOid()})));
     return {

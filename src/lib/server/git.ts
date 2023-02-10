@@ -28,11 +28,26 @@ export async function getAllVersions() {
 }
 
 export async function getFile(name: string, commit: string): Promise<Buffer | null> {
-	const k = await git.raw('ls-tree', commit, name);
+	const commit0 = commit ?? (await getVersioningCommit()).hash;
+
+	const k = await git.raw('ls-tree', commit0, name);
 	const v = k.replace('\t', ' ').split(' ')[2];
 	if (v?.length !== 40) {
 		return null;
 	}
-	const resp = await git.binaryCatFile(['blob', v]);
-	return resp;
+
+	return getFileBySHA(v);
+}
+
+export async function getFileBySHA(sha: string): Promise<Buffer | null> {
+	if (sha?.length !== 40) {
+		return null;
+	}
+	return git.binaryCatFile(['blob', sha]);
+}
+
+export async function getTree(filter: string, commit: string): Promise<[string, string][] | null> {
+	const commit0 = commit ?? (await getVersioningCommit()).hash;
+	const k = (await git.raw('ls-tree', '-r', commit0, filter)).trim();
+	return k.split('\n').map(i => (([, , sha, name]) => [sha, name])(i.replace('\t', ' ').split(' ')));
 }

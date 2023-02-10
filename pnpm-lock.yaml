@@ -20,6 +20,7 @@ specifiers:
   exceljs: ^4.3.0
   fast-deep-equal: ^3.1.3
   fs-extra: ^10.1.0
+  lru-cache: ^7.14.1
   mongodb: ^4.13.0
   morgan: ^1.10.0
   npmlog: ^7.0.1
@@ -39,6 +40,7 @@ specifiers:
 dependencies:
   fast-deep-equal: 3.1.3
   fs-extra: 10.1.0
+  lru-cache: 7.14.1
   mongodb: 4.13.0
   morgan: 1.10.0
   npmlog: 7.0.1
@@ -2628,25 +2630,30 @@ packages:
     optional: true
 
   /lodash.uniq/4.5.0:
-    resolution: {integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==}
+    resolution: { integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ== }
     dev: false
     optional: true
 
   /lru-cache/6.0.0:
-    resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
-    engines: {node: '>=10'}
+    resolution: { integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA== }
+    engines: { node: '>=10' }
     dependencies:
       yallist: 4.0.0
 
+  /lru-cache/7.14.1:
+    resolution: { integrity: sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA== }
+    engines: { node: '>=12' }
+    dev: false
+
   /magic-string/0.25.9:
-    resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
+    resolution: { integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ== }
     dependencies:
       sourcemap-codec: 1.4.8
     dev: true
 
   /magic-string/0.27.0:
-    resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
-    engines: {node: '>=12'}
+    resolution: { integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA== }
+    engines: { node: '>=12' }
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true

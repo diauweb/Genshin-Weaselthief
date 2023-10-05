@@ -17,9 +17,9 @@
             <td>
                 <b><a href={`/text/${e.hash}`}>{e.hash}</a></b>
             </td>
-            <td>
+            <!-- <td>
                 <span class="weak">{toDotVersion(e._ver)}</span>
-            </td>
+            </td> -->
             <td>
                 <TextRenderer text={e[$lang]} highlight={data.kw} />
             </td>

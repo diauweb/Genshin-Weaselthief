@@ -23,7 +23,7 @@
 			{#if filter.trim() === '' || RegExp(filter).test(n.NameTextMapHash[$lang]) }
 				<tr>
 					<th>{n.Id}</th>
-                    <th>{toDotVersion(n._ver)}</th>
+                    <!-- <th>{toDotVersion(n._ver)}</th> -->
 					<td><a href={`/npc/${n.Id}`}><Translated id={n.NameTextMapHash} /></a></td>
 				</tr>
 			{/if}

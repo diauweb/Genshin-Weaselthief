@@ -47,7 +47,7 @@
     {/if}
 </table>
 {/if}
-<h2>History</h2>
+<!-- <h2>History</h2>
 <div>
     <ul class="strip" data-uk-accordion="multiple: true">
         {#each data.history as h}
@@ -62,7 +62,7 @@
         </li>
         {/each}
     </ul>
-</div>
+</div> -->
 
 <style>
     .history-delete {

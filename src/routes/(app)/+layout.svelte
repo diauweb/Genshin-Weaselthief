@@ -14,7 +14,6 @@
 			<a href="/" class="uk-navbar-item uk-logo">Genshin Weaselthief</a>
 			<div>
 				<span class="uk-badge">{ver}</span>
-				<span class="uk-badge">{data?.dataver.ver}</span>
 			</div>
 			<ul class="uk-navbar-nav">
 				<li><a href="/">Home</a></li>

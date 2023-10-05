@@ -20,7 +20,7 @@
 				<Translated id={d.TalkContentTextMapHash} />
 			</a>
 			<div class="uk-accordion-content">
-                <table class="uk-table uk-table-small">
+                <table class="uk-table uk-table-small sm-break-table">
 					<tr>
 						<th>Id</th>
 						<td>{d.Id}</td>
@@ -81,4 +81,9 @@
 		font-family: monospace;
 	}
 
+	@media(max-width: 640px) {
+        .sm-break-table th,td {
+            display: table-row;
+        }
+    }
 </style>

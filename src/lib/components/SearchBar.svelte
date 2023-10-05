@@ -13,16 +13,30 @@
 
 <form method="POST" action="/">
     <input type="search" name="kw" class="uk-input" value={value} placeholder="Search through game texts..."/>
-    <select class="uk-select option-inline uk-margin-top uk-margin-right" name="lang" value={lang}>
-        <option value="cn">CHS</option>
-        <option value="en">EN</option>
-        <option value="jp">JP</option>
-    </select>
-    <button type="submit" class="uk-button uk-button-primary uk-margin-top">Search</button>
+
+    <div class="uk-flex buttons-column-small">
+        <select class="uk-select uk-margin-top uk-margin-right option-inline" name="lang" value={lang}>
+            <option value="cn">CHS</option>
+            <option value="en">EN</option>
+            <option value="jp">JP</option>
+        </select>
+        <button type="submit" class="uk-button uk-button-primary uk-margin-top">Search</button>
+    </div>
 </form>
 
-<style>
+<style class="postcss">
     .option-inline {
-        width: 10% !important;
+        width: 20% !important;
     }
+
+    @media(max-width: 640px) {
+        .buttons-column-small {
+            flex-direction: column;
+        }
+
+        .option-inline {
+            width: auto !important;
+        }
+    }
+
 </style>

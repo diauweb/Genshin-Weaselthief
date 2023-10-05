@@ -10,11 +10,11 @@
 
 <SearchBar lang={data.lang} value={value}/>
 
-<table class="uk-table uk-table-divider uk-table-small uk-table-striped">
+<table class="uk-table uk-table-divider uk-table-small uk-table-striped sm-break-table">
     <tbody>
         {#each data.result as e}
 		<tr>
-            <td>
+            <td class="td-hash">
                 <b><a href={`/text/${e.hash}`}>{e.hash}</a></b>
             </td>
             <!-- <td>
@@ -41,7 +41,9 @@
 </table>
 
 <style>
-    .weak {
-        color: gray;
+    @media(max-width: 640px) {
+        .sm-break-table td {
+            display: table-row;
+        }
     }
 </style>

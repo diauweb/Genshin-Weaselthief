@@ -10,13 +10,12 @@ Thanks for Dimbreath's [Genshin Data](https://github.com/Dimbreath/GenshinData) 
 
 ## Features
 - Search any text occurrance in game.
-- Show text changes among versions.
 - Show related dialogs, talks, and quests.
 
 ## Run Weaselthief
 - Install Node.JS 16+ and MongoDB
 - Download [latest build](https://github.com/diauweb/Genshin-WeaselThief/releases/latest) from Release page.
-- Place your GenshinData git repository into the project folder.
+- Place your GenshinData files into the project folder.
 - Run `index.js` to build data & run
 
 ## Develop Weaselthief
